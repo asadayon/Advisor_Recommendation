@@ -306,7 +306,7 @@ if st.session_state.clicked:
             if "flag" not in st.session_state:          
                 st.session_state["flag"] = data_dict
                 with open('rec_result.txt', 'w') as f:
-                        msg="User name is "+ name+". User reseach interests are "+keywords+". Top 3 recommended advisor list based on Cosine similarity:\n"
+                        msg="User name is "+ name+". User reseach interests are "+keywords+". Top 3 recommended advisor list based on Text (Cosine) similarity:\n"
                         for i in range(len(data_dict['Ranking'])):
                             msg+=str(i+1)+'. name: '+ data_dict['Name'][i]
                             msg+='. Cosine similarity score: '+str(data_dict['Similarity Score'][i])
@@ -382,7 +382,7 @@ if "flag" in st.session_state:
     with left_column:
         df1_new = df1                 
         df1_new = df1_new.to_dict(orient='records')
-        st.write("Top 3 recommended advisor based on Text Similarity of keywords:")
+        st.write("Top 3 recommended advisor based on Text (Cosine) Similarity of keywords:")
         #st.dataframe(df1_new, hide_index=True)
         columnDefs = [
           {
