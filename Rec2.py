@@ -7,8 +7,8 @@ from  scipy.spatial.distance import cosine
 from heapq import nsmallest,nlargest
 from openai import OpenAI
 from st_aggrid import AgGrid, JsCode, GridOptionsBuilder
-import mysql.connector
-from mysql.connector import Error
+#import mysql.connector
+#from mysql.connector import Error
 
 st.set_page_config("Advisor Recommendation", page_icon=":book:")
 data = pd.read_csv('updated_dataframe.csv')
@@ -26,7 +26,7 @@ def insert_message(connection, role, content):
     cursor = connection.cursor()
     cursor.execute("INSERT INTO chat_messages (role, content) VALUES (%s, %s)", (role, content))
     connection.commit()
-    
+***    
 def connect_to_db():
     return mysql.connector.connect(
         host=st.secrets["HOST"],
@@ -35,7 +35,7 @@ def connect_to_db():
         password=st.secrets["PASSWORD"],
         database=st.secrets["DATABASE"]  # Replace with your actual database name
     )        
-        
+***        
 
 def tokenize(txt):
   txt=str(txt)
@@ -371,9 +371,9 @@ Model Output:
                     )
                 response=response.choices[0].message.content
                 st.session_state.messages.append({"role": "assistant", "content": response})
-                connection = connect_to_db()
-                insert_message(connection, "LLM", response)
-                connection.close()
+                #connection = connect_to_db()
+                #insert_message(connection, "LLM", response)
+                #connection.close()
                 
                 
 if "flag" in st.session_state:
@@ -442,10 +442,10 @@ if "messages"  in st.session_state:
             )
             response = st.write_stream(stream)
         st.session_state.messages.append({"role": "assistant", "content": response})
-        connection = connect_to_db()
-        insert_message(connection, name, prompt)
-        insert_message(connection, "LLM", response)
-        connection.close()
+        #connection = connect_to_db()
+        #insert_message(connection, name, prompt)
+        #insert_message(connection, "LLM", response)
+        #connection.close()
                 
 
                
