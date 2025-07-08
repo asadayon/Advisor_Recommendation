@@ -26,16 +26,15 @@ def insert_message(connection, role, content):
     cursor = connection.cursor()
     cursor.execute("INSERT INTO chat_messages (role, content) VALUES (%s, %s)", (role, content))
     connection.commit()
-"""    
-def connect_to_db():
-    return mysql.connector.connect(
-        host=st.secrets["HOST"],
-        port=st.secrets["PORT"],
-        user=st.secrets["USER"],
-        password=st.secrets["PASSWORD"],
-        database=st.secrets["DATABASE"]  # Replace with your actual database name
-    )        
-"""       
+  
+#def connect_to_db():
+#    return mysql.connector.connect(
+#        host=st.secrets["HOST"],
+#        port=st.secrets["PORT"],
+#        user=st.secrets["USER"],
+#        password=st.secrets["PASSWORD"],
+#        database=st.secrets["DATABASE"]  # Replace with your actual database name
+#   )              
 
 def tokenize(txt):
   txt=str(txt)
