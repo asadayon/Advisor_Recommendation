@@ -267,7 +267,7 @@ if st.session_state.page == "home":
                 st.rerun()
                 
 
-elif st.session_state.page == "v1" or st.session_state.page == "v1":
+elif st.session_state.page == "v1" or st.session_state.page == "v2":
     # --- UI ---
     back_col, _ = st.columns([1, 4])
     with back_col:
