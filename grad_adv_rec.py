@@ -418,7 +418,7 @@ elif st.session_state.page == "v1" or st.session_state.page == "v1":
                         width="large",
                         required=True,
                     ),})
-            if if st.session_state.page == "v2":
+            if st.session_state.page == "v2":
                 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
                 if "messages"  in st.session_state:
                     for message in st.session_state.messages:
