@@ -6,3 +6,5 @@ OpenAI
 numpy
 streamlit-aggrid
 mysql-connector-python
+scikit-learn>=0.24.0
+requests>=2.25.0
