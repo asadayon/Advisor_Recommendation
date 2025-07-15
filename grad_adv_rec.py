@@ -1,0 +1,453 @@
+import streamlit as st
+import pandas as pd
+import json
+from nltk.stem import PorterStemmer
+import numpy as np
+from  scipy.spatial.distance import cosine
+from heapq import nsmallest,nlargest
+from openai import OpenAI
+from st_aggrid import AgGrid, JsCode, GridOptionsBuilder
+import pickle
+import pandas as pd
+import requests
+import random
+
+st.set_page_config("Advisor Recommendation", page_icon=":book:")
+data = pd.read_csv('updated_dataframe.csv')
+
+count_vector={}
+with open('my_dict.json', 'r') as f:
+        count_vector = json.load(f)
+
+Term_set=[]
+
+API_URL = st.secrets["api"]["url"]
+MODEL_NAME = st.secrets["api"]["model"]
+
+
+with open('Term_set.json', 'r') as f:
+        Term_set = json.load(f)
+        
+def tokenize(txt):
+  txt=str(txt)
+  txt = txt.replace(';',' ')
+  txt = txt.replace(',',' ')
+  return txt.split()
+
+def porter_stemmer(words):
+  stemmer = PorterStemmer()
+  return [stemmer.stem(word) for word in words]
+
+def user_count_vector(doc): 
+    lst=[]
+    doc=tokenize(doc)
+    doc=porter_stemmer(doc)   
+    for j in Term_set:
+         lst.append(doc.count(j))
+    return lst
+def top_similar_doc_cosine(count_vec,doc,k=3):
+        lst={}
+        for i in count_vec:
+            lst[i]=1-cosine(count_vec[i],user_count_vector(doc))
+        top_similar_doc = nlargest(k, lst, key = lst.get)
+        return lst,top_similar_doc
+
+
+def cosine_recommender(doc):
+    # Read data from stdin
+    
+
+    user_score, rec_adv=top_similar_doc_cosine(count_vector,doc,3)
+    user_score, rec_adv=top_similar_doc_cosine(count_vector,doc,3)
+    rank=[]
+    user=[]
+    score=[]
+    kw=[]
+    publication=[]
+    affiliation=[]
+    count=1
+    for i in rec_adv:
+                   rank.append(count)
+                   user.append(i)
+                   score.append(user_score[i])
+                   a=data[data['n']==i]['t']
+                   publication.append(data[data['n']==i]['paper_list'].values[0])
+                   affiliation.append(data[data['n']==i]['affiliation'].values[0])
+                 
+                   for j in a: 
+                        k=" ".join(tokenize(j))
+                        #k=tokenize(j)
+                   kw.append(k)
+                   print(kw)
+                   count+=1
+    df = {
+                                        'Ranking': rank,
+                                        'Name': user,
+                                        'Similarity Score': score,
+                                        'Keywords': kw,
+                                        'Publication':publication,
+                                        'Affiliation':affiliation
+                                    }
+    data_str = json.dumps(df)
+    
+    #print("Done")
+    with open('rec_result.json', 'w') as f:
+        json.dump(df, f)
+    return data_str
+
+def load_dict(filename):
+    with open(filename, 'r') as file:
+        return json.load(file)
+
+def LDA(keywords):
+
+    from gensim import corpora, models,  similarities
+    import ast
+    import string
+
+    
+    lda_model = models.LdaModel.load('lda_model.model')
+    dictionary = corpora.Dictionary.load('dictionary.dict')
+    index = similarities.MatrixSimilarity.load('index_file.index')
+    rank=[]
+    top=[]
+    topic_words=[]
+    topic_prob=[]
+    names=[]
+    sim=[]
+    kw=[]
+    publication=[]
+    affiliation=[]
+
+
+    #new_doc = ['end', 'user', 'parallel', 'program', 'liter', 'program', 'key', 'practic', 'program', 'style', 'end-us', 'softwar', 'engin', 'softwar', 'develop', 'end-us', 'program', 'situat', 'program', 'experi', 'program', 'standard']
+    new_doc=keywords
+    punc=''',;.'''
+    for i in punc:
+        if i in new_doc:
+            new_doc.replace(i,' ')
+    new_doc=new_doc.split()
+    new_doc=porter_stemmer(new_doc)  
+    
+    new_doc_bow = dictionary.doc2bow(new_doc)
+
+    new_doc_distribution = lda_model.get_document_topics(new_doc_bow)
+    sorted_doc_topics = sorted(new_doc_distribution, key=lambda x: -x[1])
+    top3_topics = sorted_doc_topics[:3]
+    for topic, prob in top3_topics:
+        print(f"Topic {topic} with probability {prob}")
+        top_words = lda_model.show_topic(topic, 10)
+        words_only = [word for word, pro in top_words]
+        print(f"Top words for topic {topic}: {', '.join(words_only)}")
+        top.append(topic)
+        topic_words.append(words_only)
+        topic_prob.append(prob)
+        
+        
+        
+        
+    query_lda = lda_model[new_doc_bow]
+    sims = index[query_lda]    
+    sims_list = list(enumerate(sims))
+    sorted_sims = sorted(sims_list, key=lambda item: -item[1])
+    top3_documents = sorted_sims[:3]
+    count=1
+    for doc_position, score in top3_documents:
+        print(f"Document id: {doc_position}, name: {data['n'][doc_position]} with similarity score: {score}")
+        rank.append(count)
+        names.append(data['n'][doc_position])
+        a=data['t'][doc_position]
+        publication.append(data['paper_list'][doc_position])
+        affiliation.append(data['affiliation'][doc_position])
+        a=a.replace(";"," ")
+                  
+        kw.append(a)
+        print(a)
+        sim.append(score)
+        count+=1
+    df1 = {
+                                        'LDA_rank': rank,
+                                        'LDA_Name': names,
+                                        'Score': sim,
+                                        'Keywords_LDA': kw,
+                                        'Publication':publication,
+                                        'Affiliation':affiliation
+                                       
+                                    }
+  
+    df2 = {
+                                        'Topic': top,
+                                        'Words': topic_words,
+                                        'Probability': topic_prob
+                                       
+                                    }
+    return df1,df2
+        
+def load_scenarios(file_path):
+    with open(file_path, "r", encoding="utf-8") as file:
+        scenarios = file.read().split("---")  # "---" as a separator
+    scenarios = [ x.strip() for x in scenarios]
+    return scenarios
+# --- Session state inits ---
+for key, default in [
+    ("page","home"),
+    ("user_name",""),
+    ("prediction_ready", False),
+    ("initial_prompt_sent", False),
+    ("chat_history", []),
+    ("chat_html", ""),
+    ("explain_clicked", False),
+    ("selected_symptoms_clean", None),
+    ("show_explain_option",False),
+    ("scenarios_loaded",False)
+]:
+    if key not in st.session_state:
+        st.session_state[key] = default
+
+
+if 'clicked' not in st.session_state:
+    st.session_state.clicked = False
+
+#def click_button():
+#    for key in st.session_state.keys():
+#        del st.session_state[key]
+#    st.session_state.clicked = True
+
+
+#st.title("Advisor Recommender System ")
+#st.write("This study aims to assess users' understanding of social recommendation explanations provided by a large language model (LLM) integrated into this System.  ")
+#name=st.text_input('Enter your Name')
+#keywords=st.text_input('Enter keywords of your reseach interest (i.e. Machine Learning, Natural Language Processing, Cybersecurity, Cryptography, Data Science, Human Computer Interaction, Robotics,  Software Engineering, Cloud Computing, etc)')
+
+#st.button('Submit', on_click=click_button)
+data_dict={}
+flag=0
+st.session_state["openai_model"] = "gpt-3.5-turbo"
+
+if st.session_state.page == "home":
+    st.title("Grad Student Advisor Recommender System")
+    if st.session_state.user_name == "":
+        st.markdown("### Please enter your name to get started:")
+
+        # 4.1) Name input
+        name_col, submit_col = st.columns([3, 1], vertical_alignment="bottom")
+        with name_col:
+            if st.session_state["user_name"] == "":
+                st.session_state["user_name"] = st.text_input("Your name:", value="", placeholder="Type your name here")
+                
+        
+        with submit_col:
+            if st.button("Start"):
+                if st.session_state["user_name"].strip() == "":
+                    st.warning("Please enter at least one character for your name.")
+                else:
+                    st.success(f"Hello, {st.session_state['user_name'].strip()}!")
+                    st.rerun()
+    
+    if not st.session_state.scenarios_loaded:            
+        scenarios = load_scenarios("grad_student_scenario.md")
+        random.shuffle(scenarios)
+        # Keep 3 scenarios
+        st.session_state.selected_scenarios = scenarios[:3] if len(scenarios) >= 3 else scenarios
+        st.session_state.scenarios_loaded = True
+    # Only show the welcome text & cards if we have a name
+    if st.session_state["user_name"].strip() != "":
+        st.markdown(f"#### Hi, **{st.session_state['user_name']}**! Please choose a version below:")
+        st.markdown("")
+
+        # 4.2) Two card-style buttons
+        c1, c2 = st.columns(2, gap="large")
+
+        with c1:
+            st.info("""**Version 1**: Recommendation only.
+                    \nGet Grad Advisor recommendations.""")
+            if st.button("Go to Version 1"):
+                st.session_state.page = "v1"
+                st.rerun()
+                
+
+        with c2:
+            st.info("""**Version 2**: Recommendation and AI Response.
+                    \nEnter research keywords, and ask specified follow up questions.""")
+            if st.button("Go to Version 2"):
+                st.session_state.page = "v2"
+                # Clear any previous state for v2
+                st.session_state.prediction_ready = False
+                st.session_state.initial_prompt_sent = False
+                st.session_state.chat_history = []
+                st.session_state.chat_html = ""
+                st.session_state.explain_clicked = False
+                st.rerun()
+                
+
+elif st.session_state.page == "v1" or st.session_state.page == "v1":
+    # --- UI ---
+    back_col, _ = st.columns([1, 4])
+    with back_col:
+        if st.button("← Back to Home"):
+            st.session_state.page = "home"
+            st.session_state.prediction_ready = False
+            st.session_state.initial_prompt_sent = False
+            st.session_state.chat_history = []
+            st.session_state.chat_html = ""
+            st.session_state.explain_clicked = False
+            st.session_state.show_explain_option = False
+            st.rerun()
+    
+    if st.session_state.page == "v1":
+        st.title("Grad Student Advisor Recommender System")
+        st.subheader("Version 1 - Recommendation Only")
+        st.divider()
+
+        st.markdown("_Grad Stuedent Scenario:_")
+        scenario = st.session_state.selected_scenarios[1]
+        st.info(scenario)
+        st.markdown("Enter keywords of your reseach interest separated by comma and get system's recommendations.")
+        keywords=st.text_input()
+    if st.session_state.page == "v2":
+        st.title("Grad Student Advisor Recommender System")
+        st.subheader("Version 2 - Recommendation with AI Chatbot")
+        st.divider()
+
+        st.markdown("_Grad Stuedent Scenario:_")
+        scenario = st.session_state.selected_scenarios[2]
+        st.info(scenario)
+        st.markdown("Enter keywords of your reseach interest separated by comma and get system's recommendations.")
+        keywords=st.text_input()
+
+    if st.button("Predict"):
+        if len(keywords) < 1:
+            st.warning("Please select at least one keyword.")
+        else:
+            import time
+            name=st.session_state.user_name
+            with st.spinner(text="Hello "+name+"! Please wait while we retrieve some information."):
+                output=cosine_recommender(keywords)           
+                data_dict = json.loads(output)
+                
+                lda1,lda2=LDA(keywords)          
+                st.session_state["flag"] = data_dict
+                with open('rec_result.txt', 'w') as f:
+                            msg="User name is "+ name+". User reseach interests are "+keywords+". Top 3 recommended advisor list based on Cosine similarity:\n"
+                            for i in range(len(data_dict['Ranking'])):
+                                msg+=str(i+1)+'. name: '+ data_dict['Name'][i]
+                                msg+='. Cosine similarity score: '+str(data_dict['Similarity Score'][i])
+                                msg+='. Keywords: '+data_dict['Keywords'][i]+'\n'
+                                msg+='. Publication: '+data_dict['Publication'][i]+'\n'
+                                msg+='. Affiliaiton: '+data_dict['Affiliation'][i]+'\n'
+                            f.write(msg)
+                st.session_state["lda1"] = lda1
+                with open('rec_result.txt', 'a') as f:
+                            msg="\nTop 3 recommended advisor list based on LDA Topic modeling:\n"
+                            for i in range(len(lda1['LDA_rank'])):
+                                msg+=str(i+1)+'. name: '+ lda1['LDA_Name'][i]
+                                msg+='. Similarity score: '+str(lda1['Score'][i])
+                                msg+='. Keywords: '+lda1['Keywords_LDA'][i]+'\n'
+                                msg+='. Publication: '+lda1['Publication'][i]+'\n'
+                                msg+='. Affiliation: '+lda1['Affiliation'][i]+'\n'
+                            f.write(msg)
+                st.session_state["lda2"] = lda2
+                with open('rec_result.txt', 'a') as f:
+                            msg="\nTop LDA Topic selected:\n"
+                            for i in range(len(lda2['Topic'])):
+                                msg+=str(i+1)+'. Topic id: '+ str(lda2['Topic'][i])
+                                #msg+='. Cosine similarity score: '+str(data_dict['Similarity Score'][i])
+                                msg+='. Keywords: '+" ".join(lda2['Words'][i])+'\n'
+                            f.write(msg)
+                
+                st.session_state.prediction_ready=True
+                msg="" 
+                with open('rec_result.txt', 'r') as f:
+                                    for line in f:
+                                        msg+=line
+                                        
+                prompt="""
+                An Advisor Recommendation System where recommendations are generated based on two models: text similarity and LDA topic similarity between the user's research interests and those of potential advisors.
+     Input: You are given a username and three recommended advisor names to the user based on each model. You are also provided with user research interests, and research interests of three recommended advisors. 
+    Objective: To guide users through understanding the reasoning behind advisor recommendations based on cosine similarity, and LDA topic similarity. The goal is to enhance users' technical comprehension of how their research interests align with those of the recommended advisors.
+    Expected Outcome: Users should gain a clear understanding of why specific advisors were recommended, with explanations tailored to their research interests. Users should be able to grasp the concepts of cosine similarity, topic similarity via LDA, and accurately interpret recommendation scores.
+    Do not provide overly technical jargon unless asked by the user. Do not give lengthy explanations; keep responses short, concise and user-friendly. Do not assume the user understands complex mathematical concepts; provide examples when necessary.
+    Model Output:
+     
+                """
+                st.session_state.messages = [{'role':'system', 'content':prompt+msg}]
+                    #response="Welcome "+name+"! Would you like an explanation of your recommendation for advisors?"
+                client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+                response = client.chat.completions.create(
+                            model=st.session_state["openai_model"],
+                            messages=[
+                                {"role": "system", "content": msg+prompt}
+                            ]
+                        )
+                response=response.choices[0].message.content
+                st.session_state.messages.append({"role": "assistant", "content": response})
+                    #connection = connect_to_db()
+                    #insert_message(connection, "LLM", response)
+                    #connection.close()
+                    
+                
+            if st.session_state.prediction_ready:
+                df1 = pd.DataFrame(st.session_state["flag"])
+                df2 = pd.DataFrame(st.session_state["lda1"])
+                df3 = pd.DataFrame(st.session_state["lda2"])
+                
+                #left_column, right_column = st.columns(2)
+                left_column, right_column = st.tabs(["Text Similarity", "Topic Similarity"])
+                with left_column:
+                    df1_new = df1[['Ranking','Name','Publication','Affiliation']]                
+                    df1_new = df1_new.to_dict(orient='records')
+                    st.write("Top 3 recommended advisor based on Text Similarity of keywords:")
+                    st.dataframe(df1_new, hide_index=True,  column_config={
+                    "Publication": st.column_config.Column(
+                        width="large",
+                        required=True,
+                    ),
+                     "Affiliation": st.column_config.Column(
+                        width="medium",
+                        required=True,
+                    )
+                },)
+
+
+                with right_column:
+                    st.write("Top 3 recommended advisor based on LDA Topic Similarity of 30 topics:")
+                    df2_new = df2[['LDA_rank','LDA_Name','Publication','Affiliation']] 
+                    df2_new = df2_new.to_dict(orient='records')
+                    st.dataframe(df2_new,hide_index=True, column_config={
+                    "LDA_rank": "Ranking","LDA_Name": "Name", "Publication": st.column_config.Column(
+                        width="large",
+                        required=True,
+                    ),})
+            if if st.session_state.page == "v2":
+                client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+                if "messages"  in st.session_state:
+                    for message in st.session_state.messages:
+                        if message['role']=='system':
+                            continue
+                        if message['role']=='user':
+                            with st.chat_message(message["role"],avatar="👦"):
+                                st.markdown(message["content"])
+                        else:
+                            with st.chat_message(message["role"]):
+                                st.markdown(message["content"])
+
+
+                    if prompt := st.chat_input("Example: 1. Tell me the research interests of the recommended advisor based on cosine similarity. \n2. Tell me why 'X' is recommended.\n 3. What is cosine similarity."):
+                        st.session_state.messages.append({"role": "user", "content": prompt})
+                        with st.chat_message("user",avatar="👦"):
+                            st.markdown(prompt)
+
+                        with st.chat_message("assistant"):
+                            stream = client.chat.completions.create(
+                                model=st.session_state["openai_model"],
+                                messages=[
+                                    {"role": m["role"], "content": m["content"]}
+                                    for m in st.session_state.messages
+                                ],
+                                stream=True,
+                            )
+                            response = st.write_stream(stream)
+                        st.session_state.messages.append({"role": "assistant", "content": response})
+
+                                
+
