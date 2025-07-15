@@ -1,6 +1,6 @@
 nltk
 gensim
-scipy==1.10.1
+scipy
 pandas
 OpenAI
 numpy
