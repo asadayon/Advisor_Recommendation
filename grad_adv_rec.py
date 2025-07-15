@@ -21,8 +21,6 @@ with open('my_dict.json', 'r') as f:
 
 Term_set=[]
 
-#API_URL = st.secrets["api"]["url"]
-#MODEL_NAME = st.secrets["api"]["model"]
 
 
 with open('Term_set.json', 'r') as f:
@@ -208,18 +206,7 @@ for key, default in [
 if 'clicked' not in st.session_state:
     st.session_state.clicked = False
 
-#def click_button():
-#    for key in st.session_state.keys():
-#        del st.session_state[key]
-#    st.session_state.clicked = True
 
-
-#st.title("Advisor Recommender System ")
-#st.write("This study aims to assess users' understanding of social recommendation explanations provided by a large language model (LLM) integrated into this System.  ")
-#name=st.text_input('Enter your Name')
-#keywords=st.text_input('Enter keywords of your reseach interest (i.e. Machine Learning, Natural Language Processing, Cybersecurity, Cryptography, Data Science, Human Computer Interaction, Robotics,  Software Engineering, Cloud Computing, etc)')
-
-#st.button('Submit', on_click=click_button)
 data_dict={}
 flag=0
 st.session_state["openai_model"] = "gpt-3.5-turbo"
