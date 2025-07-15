@@ -299,8 +299,7 @@ elif st.session_state.page == "v1" or st.session_state.page == "v2":
         st.markdown("_Grad Stuedent Scenario:_")
         scenario = st.session_state.selected_scenarios[2]
         st.info(scenario)
-        st.markdown("Enter keywords of your reseach interest separated by comma and get system's recommendations.")
-        keywords=st.text_input()
+        keywords=st.text_input("Enter keywords of your reseach interest separated by comma and get system's recommendations.")
 
     if st.button("Predict"):
         if len(keywords) < 1:
