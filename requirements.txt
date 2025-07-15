@@ -8,4 +8,4 @@ scipy<1.13
 OpenAI
 streamlit-aggrid
 mysql-connector-python
-gensim==3.8.0
+gensim
