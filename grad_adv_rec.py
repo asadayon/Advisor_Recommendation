@@ -21,8 +21,8 @@ with open('my_dict.json', 'r') as f:
 
 Term_set=[]
 
-API_URL = st.secrets["api"]["url"]
-MODEL_NAME = st.secrets["api"]["model"]
+#API_URL = st.secrets["api"]["url"]
+#MODEL_NAME = st.secrets["api"]["model"]
 
 
 with open('Term_set.json', 'r') as f:
