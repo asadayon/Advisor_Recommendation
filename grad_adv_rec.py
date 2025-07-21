@@ -359,7 +359,7 @@ elif st.session_state.page == "v1" or st.session_state.page == "v2":
                 
                     
                 
-            if st.session_state.prediction_ready:
+    if st.session_state.prediction_ready:
                 df1 = pd.DataFrame(st.session_state["flag"])
                 df2 = pd.DataFrame(st.session_state["lda1"])
                 df3 = pd.DataFrame(st.session_state["lda2"])
@@ -391,36 +391,36 @@ elif st.session_state.page == "v1" or st.session_state.page == "v2":
                         width="large",
                         required=True,
                     ),})
-            if st.session_state.page == "v2":
-                client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
-                if "messages"  in st.session_state:
-                    for message in st.session_state.messages:
-                        if message['role']=='system':
-                            continue
-                        if message['role']=='user':
-                            with st.chat_message(message["role"],avatar="👦"):
-                                st.markdown(message["content"])
-                        else:
-                            with st.chat_message(message["role"]):
-                                st.markdown(message["content"])
-
-
-                    if prompt := st.chat_input("Example: 1. Tell me the research interests of the recommended advisor based on cosine similarity. \n2. Tell me why 'X' is recommended.\n 3. What is cosine similarity."):
-                        st.session_state.messages.append({"role": "user", "content": prompt})
-                        with st.chat_message("user",avatar="👦"):
-                            st.markdown(prompt)
-
-                        with st.chat_message("assistant"):
-                            stream = client.chat.completions.create(
-                                model=st.session_state["openai_model"],
-                                messages=[
-                                    {"role": m["role"], "content": m["content"]}
-                                    for m in st.session_state.messages
-                                ],
-                                stream=True,
-                            )
-                            response = st.write_stream(stream)
-                        st.session_state.messages.append({"role": "assistant", "content": response})
-
-                                
-
+                if st.session_state.page == "v2":
+                        client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+                        if "messages"  in st.session_state:
+                            for message in st.session_state.messages:
+                                if message['role']=='system':
+                                    continue
+                                if message['role']=='user':
+                                    with st.chat_message(message["role"],avatar="👦"):
+                                        st.markdown(message["content"])
+                                else:
+                                    with st.chat_message(message["role"]):
+                                        st.markdown(message["content"])
+        
+        
+                            if prompt := st.chat_input("Example: 1. Tell me the research interests of the recommended advisor based on cosine similarity. \n2. Tell me why 'X' is recommended.\n 3. What is cosine similarity."):
+                                st.session_state.messages.append({"role": "user", "content": prompt})
+                                with st.chat_message("user",avatar="👦"):
+                                    st.markdown(prompt)
+        
+                                with st.chat_message("assistant"):
+                                    stream = client.chat.completions.create(
+                                        model=st.session_state["openai_model"],
+                                        messages=[
+                                            {"role": m["role"], "content": m["content"]}
+                                            for m in st.session_state.messages
+                                        ],
+                                        stream=True,
+                                    )
+                                    response = st.write_stream(stream)
+                                st.session_state.messages.append({"role": "assistant", "content": response})
+        
+                                        
+        
