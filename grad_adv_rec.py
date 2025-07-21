@@ -110,7 +110,7 @@ def load_dict(filename):
 def LDA(keywords):
     rank, top, topic_words, topic_prob = [], [], [], []
     names, sim, kw, publication, affiliation = [], [], [], [], []
-    from sklearn.metrics.pairwise import cosine_similarity
+    from sklearn.metrics.pairwise import cosine_similarity as cosim
 
     # Preprocess user keywords
     new_doc = porter_stemmer(tokenize(keywords))
@@ -122,7 +122,7 @@ def LDA(keywords):
     top3_indices = topic_distribution.argsort()[-3:][::-1]
     # Similarity with existing documents
     new_topic_matrix = lda_model.transform(new_doc_vector)
-    similarities = cosine_similarity(new_topic_matrix, doc_topic_matrix)[0]
+    similarities = cosim(new_topic_matrix, doc_topic_matrix)[0]
     sorted_sims = similarities.argsort()[-3:][::-1]
 
 
