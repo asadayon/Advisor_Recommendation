@@ -11,7 +11,7 @@ import pandas as pd
 import requests
 import random
 import joblib
-from sklearn.metrics.pairwise import cosine_similarity
+
 
 st.set_page_config("Advisor Recommendation", page_icon=":book:")
 data = pd.read_csv('updated_dataframe.csv')
@@ -110,6 +110,7 @@ def load_dict(filename):
 def LDA(keywords):
     rank, top, topic_words, topic_prob = [], [], [], []
     names, sim, kw, publication, affiliation = [], [], [], [], []
+    from sklearn.metrics.pairwise import cosine_similarity
 
     # Preprocess user keywords
     new_doc = porter_stemmer(tokenize(keywords))
