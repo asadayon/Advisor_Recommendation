@@ -8,4 +8,4 @@ nltk
 OpenAI
 streamlit-aggrid
 mysql-connector-python
-gensim
+gensim==4.3.2
