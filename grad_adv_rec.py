@@ -10,9 +10,13 @@ import pickle
 import pandas as pd
 import requests
 import random
+import joblib
+from sklearn.metrics.pairwise import cosine_similarity
 
 st.set_page_config("Advisor Recommendation", page_icon=":book:")
 data = pd.read_csv('updated_dataframe.csv')
+lda_model = joblib.load('lda_model.pkl')
+vectorizer = joblib.load('vectorizer.pkl')
 
 count_vector={}
 with open('my_dict.json', 'r') as f:
@@ -103,88 +107,58 @@ def load_dict(filename):
         return json.load(file)
 
 def LDA(keywords):
+    rank, top, topic_words, topic_prob = [], [], [], []
+    names, sim, kw, publication, affiliation = [], [], [], [], []
 
-    from gensim import corpora, models,  similarities
-    import ast
-    import string
+    # Preprocess user keywords
+    new_doc = porter_stemmer(tokenize(keywords))
+    new_doc_text = " ".join(new_doc)
+    new_doc_vector = vectorizer.transform([new_doc_text])
 
-    
-    lda_model = models.LdaModel.load('lda_model.model')
-    dictionary = corpora.Dictionary.load('dictionary.dict')
-    index = similarities.MatrixSimilarity.load('index_file.index')
-    rank=[]
-    top=[]
-    topic_words=[]
-    topic_prob=[]
-    names=[]
-    sim=[]
-    kw=[]
-    publication=[]
-    affiliation=[]
+    # Topic distribution
+    topic_distribution = lda_model.transform(new_doc_vector)[0]
+    top3_indices = topic_distribution.argsort()[-3:][::-1]
 
-
-    #new_doc = ['end', 'user', 'parallel', 'program', 'liter', 'program', 'key', 'practic', 'program', 'style', 'end-us', 'softwar', 'engin', 'softwar', 'develop', 'end-us', 'program', 'situat', 'program', 'experi', 'program', 'standard']
-    new_doc=keywords
-    punc=''',;.'''
-    for i in punc:
-        if i in new_doc:
-            new_doc.replace(i,' ')
-    new_doc=new_doc.split()
-    new_doc=porter_stemmer(new_doc)  
-    
-    new_doc_bow = dictionary.doc2bow(new_doc)
-
-    new_doc_distribution = lda_model.get_document_topics(new_doc_bow)
-    sorted_doc_topics = sorted(new_doc_distribution, key=lambda x: -x[1])
-    top3_topics = sorted_doc_topics[:3]
-    for topic, prob in top3_topics:
-        print(f"Topic {topic} with probability {prob}")
-        top_words = lda_model.show_topic(topic, 10)
-        words_only = [word for word, pro in top_words]
-        print(f"Top words for topic {topic}: {', '.join(words_only)}")
+    for topic in top3_indices:
+        prob = topic_distribution[topic]
+        print(f"Topic {topic} with probability {prob:.4f}")
+        topic_terms = lda_model.components_[topic]
+        top_words_idx = topic_terms.argsort()[-10:][::-1]
+        words = [vectorizer.get_feature_names_out()[i] for i in top_words_idx]
+        print(f"Top words for topic {topic}: {', '.join(words)}")
         top.append(topic)
-        topic_words.append(words_only)
+        topic_words.append(words)
         topic_prob.append(prob)
-        
-        
-        
-        
-    query_lda = lda_model[new_doc_bow]
-    sims = index[query_lda]    
-    sims_list = list(enumerate(sims))
-    sorted_sims = sorted(sims_list, key=lambda item: -item[1])
-    top3_documents = sorted_sims[:3]
-    count=1
-    for doc_position, score in top3_documents:
-        print(f"Document id: {doc_position}, name: {data['n'][doc_position]} with similarity score: {score}")
+
+
+
+    for count, doc_position in enumerate(sorted_sims, 1):
+        score = similarities[doc_position]
+        print(f"Document id: {doc_position}, name: {data['n'][doc_position]} with similarity score: {score:.4f}")
         rank.append(count)
         names.append(data['n'][doc_position])
-        a=data['t'][doc_position]
         publication.append(data['paper_list'][doc_position])
         affiliation.append(data['affiliation'][doc_position])
-        a=a.replace(";"," ")
-                  
+        a = data['t'][doc_position].replace(";", " ")
         kw.append(a)
-        print(a)
         sim.append(score)
-        count+=1
+
     df1 = {
-                                        'LDA_rank': rank,
-                                        'LDA_Name': names,
-                                        'Score': sim,
-                                        'Keywords_LDA': kw,
-                                        'Publication':publication,
-                                        'Affiliation':affiliation
-                                       
-                                    }
-  
+        'LDA_rank': rank,
+        'LDA_Name': names,
+        'Score': sim,
+        'Keywords_LDA': kw,
+        'Publication': publication,
+        'Affiliation': affiliation
+    }
+
     df2 = {
-                                        'Topic': top,
-                                        'Words': topic_words,
-                                        'Probability': topic_prob
-                                       
-                                    }
-    return df1,df2
+        'Topic': top,
+        'Words': topic_words,
+        'Probability': topic_prob
+    }
+
+    return df1, df2
         
 def load_scenarios(file_path):
     with open(file_path, "r", encoding="utf-8") as file:
