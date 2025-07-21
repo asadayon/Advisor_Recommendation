@@ -120,7 +120,7 @@ def LDA(keywords):
     topic_distribution = lda_model.transform(new_doc_vector)[0]
     top3_indices = topic_distribution.argsort()[-3:][::-1]
     # Similarity with existing documents
-    similarities = cosine_similarity(new_doc_vector, doc_term_matrix)[0]
+    similarities = cosine_similarity(new_doc_vector, doc_topic_matrix)[0]
     sorted_sims = similarities.argsort()[-3:][::-1]
 
 
