@@ -3,7 +3,6 @@ import pandas as pd
 import json
 from nltk.stem import PorterStemmer
 import numpy as np
-from  scipy.spatial.distance import cosine
 from heapq import nsmallest,nlargest
 from openai import OpenAI
 from st_aggrid import AgGrid, JsCode, GridOptionsBuilder
@@ -43,10 +42,16 @@ def user_count_vector(doc):
     for j in Term_set:
          lst.append(doc.count(j))
     return lst
+        
+def cosine_similarity(a, b):
+    a = np.asarray(a)
+    b = np.asarray(b)
+    return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b) + 1e-10)  # add epsilon to avoid divide by zero
+
 def top_similar_doc_cosine(count_vec,doc,k=3):
         lst={}
         for i in count_vec:
-            lst[i]=1-cosine(count_vec[i],user_count_vector(doc))
+            lst[i] = cosine_similarity(count_vec[i], user_count_vector(doc))
         top_similar_doc = nlargest(k, lst, key = lst.get)
         return lst,top_similar_doc
 
