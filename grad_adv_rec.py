@@ -356,6 +356,7 @@ elif st.session_state.page == "v1" or st.session_state.page == "v2":
                     #connection = connect_to_db()
                     #insert_message(connection, "LLM", response)
                     #connection.close()
+                st.rerun()
                     
                 
             if st.session_state.prediction_ready:
