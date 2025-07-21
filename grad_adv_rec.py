@@ -17,6 +17,7 @@ st.set_page_config("Advisor Recommendation", page_icon=":book:")
 data = pd.read_csv('updated_dataframe.csv')
 lda_model = joblib.load('lda_model.pkl')
 vectorizer = joblib.load('vectorizer.pkl')
+doc_topic_matrix = joblib.load('doc_topic_matrix.pkl')
 
 count_vector={}
 with open('my_dict.json', 'r') as f:
@@ -118,6 +119,11 @@ def LDA(keywords):
     # Topic distribution
     topic_distribution = lda_model.transform(new_doc_vector)[0]
     top3_indices = topic_distribution.argsort()[-3:][::-1]
+    # Similarity with existing documents
+    similarities = cosine_similarity(new_doc_vector, doc_term_matrix)[0]
+    sorted_sims = similarities.argsort()[-3:][::-1]
+
+
 
     for topic in top3_indices:
         prob = topic_distribution[topic]
