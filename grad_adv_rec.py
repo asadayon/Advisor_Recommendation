@@ -391,6 +391,29 @@ elif st.session_state.page == "v1" or st.session_state.page == "v2":
                         width="large",
                         required=True,
                     ),})
+                if st.session_state.page == "v1":
+                        st.markdown("---")
+                        
+                        st.markdown("## 📋 How the Advisor Recommender System Works")
+                        
+                        st.markdown("""
+                        Our system is designed to help prospective graduate students find suitable research advisors by matching them based on shared research interests and publications. The system uses two models: a **Text Similarity Model** and a **Topic Similarity Model**, each generating the top three advisor recommendations based on the user’s input keywords.
+                        
+                        The **Text Similarity Model** converts research keywords from publications into numerical count vectors and uses cosine similarity to measure how closely a user’s research interests align with those of potential advisors. A score closer to 1 indicates a stronger match, and the top three advisors with the highest similarity scores are recommended.
+                        
+                        The **Topic Similarity Model** employs Latent Dirichlet Allocation (LDA) to categorize publication keywords into 30 thematic clusters. Each advisor is assigned probability scores across these topics, creating a thematic profile. The system matches the user’s input keywords to these topics and recommends the top three advisors whose profiles align most closely with the user’s interests.
+                        
+                        Results are displayed in two tabs: one for Text Similarity and one for Topic Similarity, each showing advisors’ names, affiliations, and publication details. The recommendations aim to foster meaningful academic collaborations by aligning students with advisors whose research interests are most compatible.
+                        """)
+                        
+                        with st.expander("**Key Terms**", expanded=True):
+                            st.markdown("""
+                        - **Text Similarity Model:** Converts publication keywords into count vectors and uses cosine similarity to measure alignment with user interests.
+                        - **Topic Similarity Model:** Uses Latent Dirichlet Allocation (LDA) to group keywords into 30 topics and matches user interests to advisors’ thematic profiles.
+                        - **Cosine Similarity:** A score (0 to 1) indicating how closely two sets of keywords align; higher scores mean greater similarity.
+                        - **Latent Dirichlet Allocation (LDA):** A model that groups keywords into thematic clusters to identify research topics.
+                        - **Count Vector:** A numerical representation of keywords, where each value indicates the presence or frequency of a keyword.
+                        """)
                 if st.session_state.page == "v2":
                         client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
                         if "messages"  in st.session_state:
