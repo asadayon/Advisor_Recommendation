@@ -366,9 +366,9 @@ Help users interpret why these advisors were recommended, how closely their rese
   • How keyword similarity (cosine similarity) works like comparing the direction of two arrows.
   • How LDA groups keywords into research themes and compares distributions.
 - Explain why using both models gives a more robust match.
-- Provide Feature-Based Explanation: Explains how individual research keywords contributed to the results.
-- Counterfactual-Based Explanation: Shows how changing reseach keywords would alter predictions.
-- Model Inner Working with Simple Example: Provides a basic calculation overview of how the system makes decisions.
+- Provide Feature-Based Explanation: Explains how users individual research keywords contributed to the results. Provide example using users individual research keywords .
+- Counterfactual-Based Explanation: Shows how changing reseach keywords would alter predictions. Provide example using users individual research keywords .
+- Model Inner Working with Simple Example: Provides a basic calculation overview of how the system makes decisions. Provide example using users individual research keywords .
 
 **For Scenario-Specific Questions** (e.g., *"Why was Dr. X recommended?"*):
 - Explain how the user’s keywords closely matched the advisor’s keywords or topics.
