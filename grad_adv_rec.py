@@ -359,7 +359,9 @@ Help users interpret why these advisors were recommended, how closely their rese
 **Guidelines:**
 - Avoid technical jargon unless the user asks for it.
 - Keep explanations concise and beginner-friendly.
-- Provide examples if helpful.
+- Provide Feature-Based Explanation: Explains how individual research keywords contributed to the results.
+- Counterfactual-Based Explanation: Shows how changing reseach keywords would alter predictions.
+- Model Inner Working with Simple Example: Provides a basic calculation overview of how the system makes decisions.
 - You can answer both **general** and **scenario-specific** questions.
 
 **For General Questions** (e.g., *"How does the system work?"*):
