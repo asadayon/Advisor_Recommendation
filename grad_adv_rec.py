@@ -368,7 +368,7 @@ Help users interpret why these advisors were recommended, how closely their rese
 - Explain why using both models gives a more robust match.
 - Provide Feature-Based Explanation: Explains how users individual research keywords contributed to the results. Provide example using users individual research keywords .
 - Counterfactual-Based Explanation: Shows how changing reseach keywords would alter predictions. Provide example using users individual research keywords .
-- Model Inner Working with Simple Example: Provides a basic calculation overview of how the system makes decisions. Provide example using users individual research keywords .
+- Model Inner Working with Simple Example: Provides a basic calculation overview of how the system makes decisions. Provide example such as [Autonomous Robots, Multi-Robot Systems, Tele-Operation, Robot Navigation, Swarm Robotics, Disaster Response] as vector using users individual research keywords then calculate similarity and LDA.
 
 **For Scenario-Specific Questions** (e.g., *"Why was Dr. X recommended?"*):
 - Explain how the user’s keywords closely matched the advisor’s keywords or topics.
