@@ -289,6 +289,7 @@ elif st.session_state.page == "v1" or st.session_state.page == "v2":
         st.info(scenario)
         st.markdown("Enter keywords of your reseach interest separated by comma and get system's recommendations.")
         keywords = st.multiselect("Select symptoms:", options=options)
+        keywords = ", ".join(keywords[:-1]) + f", and {keywords[-1]}" if len(keywords) > 1 else keywords[0]
 
     if st.button("Predict"):
         if len(keywords) < 1:
