@@ -18,6 +18,8 @@ data = pd.read_csv('updated_dataframe.csv')
 lda_model = joblib.load('lda_model.pkl')
 vectorizer = joblib.load('vectorizer.pkl')
 doc_topic_matrix = joblib.load('doc_topic_matrix.pkl')
+options = ["software engineering", "software process", "software system", "software quality", "design debt", "case studies", "software development", "software evolution", "online communities", "websites", "web pages", "related websites", "web spam", "web communities", "web mining", "online community analysis", "spammy website networks", "rescue robots", "autonomous mobile robots", "autonomous mode", "tele-operation mode", "multiple robots", "mobile robot", "proposed system", "mobile applications", "mobile devices", "smart phones", "mobile Internet devices", "context information", "resource-constrained mobile devices", "mobile users", "mobile phone", "mobile devices adaptive"]
+
 
 count_vector={}
 with open('my_dict.json', 'r') as f:
@@ -285,7 +287,8 @@ elif st.session_state.page == "v1" or st.session_state.page == "v2":
         st.markdown("_Grad Stuedent Scenario:_")
         scenario = st.session_state.selected_scenarios[2]
         st.info(scenario)
-        keywords=st.text_input("Enter keywords of your reseach interest separated by comma and get system's recommendations.")
+        st.markdown("Enter keywords of your reseach interest separated by comma and get system's recommendations.")
+        keywords = st.multiselect("Select symptoms:", options=options)
 
     if st.button("Predict"):
         if len(keywords) < 1:
