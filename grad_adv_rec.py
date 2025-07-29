@@ -313,6 +313,7 @@ elif st.session_state.page == "v1" or st.session_state.page == "v2":
                                 msg+=str(i+1)+'. name: '+ data_dict['Name'][i]
                                 if i==0:
                                         questions.append(f"Why was Dr. {data_dict['Name'][i]} recommended?")
+                                        print(questions)
                                 msg+='. Cosine similarity score: '+str(data_dict['Similarity Score'][i])
                                 msg+='. Keywords: '+data_dict['Keywords'][i]+'\n'
                                 msg+='. Publication: '+data_dict['Publication'][i]+'\n'
