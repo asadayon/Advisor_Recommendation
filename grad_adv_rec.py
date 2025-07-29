@@ -475,15 +475,17 @@ You are now ready to answer the user’s questions about their recommended gradu
                                     with st.chat_message(message["role"]):
                                         st.markdown(message["content"])
                             def ask_and_advance(i):
-                                    response = client.chat.completions.create(
-                                            model=st.session_state["openai_model"],
-                                            messages=[
-                                                {"role": "assistant", "content": st.session_state.questions[i]}
-                                            ]
-                                        )
-                                    st.session_state.question_asked+=1
-                                    response=response.choices[0].message.content
                                     st.session_state.messages.append({"role": "user", "content": st.session_state.questions[i]})
+                                    stream = client.chat.completions.create(
+                                        model=st.session_state["openai_model"],
+                                        messages=[
+                                            {"role": m["role"], "content": m["content"]}
+                                            for m in st.session_state.messages
+                                        ],
+                                        stream=True,
+                                    )
+                                    response = st.write_stream(stream)                               
+                                    st.session_state.question_asked+=1                                  
                                     st.session_state.messages.append({"role": "assistant", "content": response})
                             if st.session_state.question_asked<2:
                                                 st.button(
