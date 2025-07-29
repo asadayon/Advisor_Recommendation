@@ -186,6 +186,7 @@ for key, default in [
     ("explain_clicked", False),
     ("selected_symptoms_clean", None),
     ("show_explain_option",False),
+    ("question_asked",0)
     ("scenarios_loaded",False)
 ]:
     if key not in st.session_state:
@@ -195,7 +196,7 @@ for key, default in [
 if 'clicked' not in st.session_state:
     st.session_state.clicked = False
 
-
+questions=["How does the system work?"]
 data_dict={}
 flag=0
 st.session_state["openai_model"] = "gpt-3.5-turbo"
@@ -253,6 +254,7 @@ if st.session_state.page == "home":
                 st.session_state.chat_history = []
                 st.session_state.chat_html = ""
                 st.session_state.explain_clicked = False
+                st.session_state.question_asked = 0
                 st.rerun()
                 
 
@@ -268,6 +270,7 @@ elif st.session_state.page == "v1" or st.session_state.page == "v2":
             st.session_state.chat_html = ""
             st.session_state.explain_clicked = False
             st.session_state.show_explain_option = False
+            st.session_state.question_asked = 0
             st.rerun()
     
     if st.session_state.page == "v1":
@@ -308,6 +311,8 @@ elif st.session_state.page == "v1" or st.session_state.page == "v2":
                             msg="User name is "+ name+". User reseach interests are "+keywords+". Top 3 recommended advisor list based on Cosine similarity:\n"
                             for i in range(len(data_dict['Ranking'])):
                                 msg+=str(i+1)+'. name: '+ data_dict['Name'][i]
+                                if i==0:
+                                        questions.append(f"Why was Dr. {data_dict['Name'][i]} recommended?")
                                 msg+='. Cosine similarity score: '+str(data_dict['Similarity Score'][i])
                                 msg+='. Keywords: '+data_dict['Keywords'][i]+'\n'
                                 msg+='. Publication: '+data_dict['Publication'][i]+'\n'
@@ -468,8 +473,23 @@ You are now ready to answer the user’s questions about their recommended gradu
                                 else:
                                     with st.chat_message(message["role"]):
                                         st.markdown(message["content"])
-        
-        
+                            def ask_and_advance(i):
+                                    response = client.chat.completions.create(
+                                            model=st.session_state["openai_model"],
+                                            messages=[
+                                                {"role": "assistant", "content": questions[i]}
+                                            ]
+                                        )
+                                    st.session_state.question_asked+=1
+                                    response=response.choices[0].message.content
+                                    st.session_state.messages.append({"role": "user", "content": questions[i]}
+                                    st.session_state.messages.append({"role": "assistant", "content": response}
+                            if st.session_state.question_asked<2:
+                                                st.button(
+                                                questions[st.session_state.question_asked],
+                                                on_click=ask_and_advance,
+                                                args=(st.session_state.question_asked,)
+                                                    )
                             if prompt := st.chat_input("Example: 1. Tell me the research interests of the recommended advisor based on cosine similarity. \n2. Tell me why 'X' is recommended.\n 3. What is cosine similarity."):
                                 st.session_state.messages.append({"role": "user", "content": prompt})
                                 with st.chat_message("user",avatar="👦"):
