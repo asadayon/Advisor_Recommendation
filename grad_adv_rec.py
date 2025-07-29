@@ -482,7 +482,7 @@ You are now ready to answer the user’s questions about their recommended gradu
                                         )
                                     st.session_state.question_asked+=1
                                     response=response.choices[0].message.content
-                                    st.session_state.messages.append({"role": "user", "content": questions[i]}
+                                    st.session_state.messages.append({"role": "user", "content": questions[i]})
                                     st.session_state.messages.append({"role": "assistant", "content": response})
                             if st.session_state.question_asked<2:
                                                 st.button(
