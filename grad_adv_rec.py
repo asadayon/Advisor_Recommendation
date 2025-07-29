@@ -186,7 +186,7 @@ for key, default in [
     ("explain_clicked", False),
     ("selected_symptoms_clean", None),
     ("show_explain_option",False),
-    ("question_asked",0)
+    ("question_asked",0),
     ("scenarios_loaded",False)
 ]:
     if key not in st.session_state:
