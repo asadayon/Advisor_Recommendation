@@ -289,7 +289,7 @@ elif st.session_state.page == "v1" or st.session_state.page == "v2":
         st.info(scenario)
         st.markdown("Enter keywords of your reseach interest separated by comma and get system's recommendations.")
         keywords = st.multiselect("Select symptoms:", options=options)
-        keywords = ", ".join(keywords[:-1]) + f", and {keywords[-1]}" if len(keywords) > 1 else keywords[0]
+        
 
     if st.button("Predict"):
         if len(keywords) < 1:
@@ -297,6 +297,7 @@ elif st.session_state.page == "v1" or st.session_state.page == "v2":
         else:
             import time
             name=st.session_state.user_name
+            keywords = ", ".join(keywords[:-1]) + f", and {keywords[-1]}" if len(keywords) > 1 else keywords[0]
             with st.spinner(text="Hello "+name+"! Please wait while we retrieve some information."):
                 output=cosine_recommender(keywords)           
                 data_dict = json.loads(output)
