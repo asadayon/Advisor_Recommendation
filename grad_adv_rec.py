@@ -187,6 +187,7 @@ for key, default in [
     ("selected_symptoms_clean", None),
     ("show_explain_option",False),
     ("question_asked",0),
+    ("questions",["How does the system work?"]),
     ("scenarios_loaded",False)
 ]:
     if key not in st.session_state:
@@ -312,8 +313,7 @@ elif st.session_state.page == "v1" or st.session_state.page == "v2":
                             for i in range(len(data_dict['Ranking'])):
                                 msg+=str(i+1)+'. name: '+ data_dict['Name'][i]
                                 if i==0:
-                                        questions.append(f"Why was Dr. {data_dict['Name'][i]} recommended?")
-                                        print(questions)
+                                        st.session_state.append(f"Why was Dr. {data_dict['Name'][i]} recommended?")
                                 msg+='. Cosine similarity score: '+str(data_dict['Similarity Score'][i])
                                 msg+='. Keywords: '+data_dict['Keywords'][i]+'\n'
                                 msg+='. Publication: '+data_dict['Publication'][i]+'\n'
