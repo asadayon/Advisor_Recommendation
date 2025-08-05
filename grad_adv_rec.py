@@ -636,6 +636,7 @@ You are now ready to answer the user’s questions about their recommended gradu
                                             )
                                             response = st.write_stream(stream)
                                         st.session_state.messages.append({"role": "assistant", "content": response})
+                                        st.rerun()
                 
                                                 
                 
