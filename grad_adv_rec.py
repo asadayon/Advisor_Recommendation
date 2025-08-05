@@ -608,7 +608,7 @@ You are now ready to answer the user’s questions about their recommended gradu
                                                             button_key=f"followup_btn_{st.session_state.question_asked}"
                                                         ):
                                                         ask_and_advance(st.session_state.question_asked)
-                                                        st.rerun()
+                                                       
                                                         
                                                 
                             if st.session_state.question_asked>=2:
