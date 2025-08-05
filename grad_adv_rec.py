@@ -287,7 +287,7 @@ for key, default in [
 if 'clicked' not in st.session_state:
     st.session_state.clicked = False
 
-questions=["How does the system work?","Tell me how the first advisor in text similarity model recommended?","Tell me how the first advisor in text similarity model recommended?"]
+questions=["How does the system work?","Tell me how the first advisor in text similarity model recommended?","Tell me how the first advisor in text similarity model recommended?","","",""]
 data_dict={}
 flag=0
 st.session_state["openai_model"] = "gpt-3.5-turbo"
