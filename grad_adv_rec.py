@@ -105,6 +105,96 @@ def cosine_recommender(doc):
         json.dump(df, f)
     return data_str
 
+
+COOLDOWN_TIME_LONG = 120
+COOLDOWN_TIME_SHORT = 30
+import time
+from datetime import datetime, timedelta
+
+def countdown_component_html(message, duration_sec, reveal_html):
+    # Initialize unlock_time only when not already set
+    if "unlock_time" not in st.session_state:
+        st.session_state.unlock_time = datetime.now() + timedelta(seconds=duration_sec)
+
+    remaining = int((st.session_state.unlock_time - datetime.now()).total_seconds())
+    
+    html_code = f"""
+    <div style="font-weight:bold;font-size:16px;">
+        <span id="timer">{message} — {remaining//60:02d}:{remaining%60:02d}</span>
+    </div>
+
+    <div id="reveal-section" style="display:none; margin-top:10px;">
+        {reveal_html}
+    </div>
+
+    <script>
+    var seconds = {remaining};
+    var timerElement = document.getElementById("timer");
+    var revealSection = document.getElementById("reveal-section");
+    var countdown = setInterval(function(){{
+        if (seconds > 0) {{
+            seconds--;
+            var mins = Math.floor(seconds/60);
+            var secs = seconds % 60;
+            timerElement.innerHTML = "{message} — " + 
+                (mins<10?"0":"") + mins + ":" + (secs<10?"0":"") + secs;
+        }} else {{
+            clearInterval(countdown);
+            timerElement.innerHTML = "You can now proceed!";
+            revealSection.style.display = "block";
+        }}
+    }}, 1000);
+    </script>
+    """
+
+    st.components.v1.html(html_code, height=120)
+    
+    def countdown_with_button(message, duration_sec, button_label, button_key):
+    # Initialize countdown state
+    if f"{button_key}_done" not in st.session_state:
+        st.session_state[f"{button_key}_done"] = False
+
+    if not st.session_state[f"{button_key}_done"]:
+        placeholder = st.empty()
+        for remaining in range(duration_sec, 0, -1):
+            mins, secs = divmod(remaining, 60)
+            placeholder.markdown(f"**{message} — {mins:02d}:{secs:02d}**")
+            time.sleep(1)
+        placeholder.empty()
+        st.session_state[f"{button_key}_done"] = True
+
+    # Show button only after countdown done
+    return st.button(button_label, key=button_key)
+
+
+    
+def countdown_with_form(message, duration_sec, form_key, input_key, submit_label="➤"):
+    """
+    Shows a countdown before revealing a form with text input + submit.
+    Returns the user input if submitted, else None.
+    """
+    if f"{form_key}_done" not in st.session_state:
+        st.session_state[f"{form_key}_done"] = False
+
+    if not st.session_state[f"{form_key}_done"]:
+        placeholder = st.empty()
+        for remaining in range(duration_sec, 0, -1):
+            mins, secs = divmod(remaining, 60)
+            placeholder.markdown(f"**{message} — {mins:02d}:{secs:02d}**")
+            time.sleep(1)
+        placeholder.empty()
+        st.session_state[f"{form_key}_done"] = True
+
+    # Show form after countdown done
+    if st.session_state[f"{form_key}_done"]:
+        with st.form(form_key, clear_on_submit=True):
+            cols = st.columns([4, 0.5])
+            user_input = cols[0].text_input("", key=input_key, label_visibility="collapsed")
+            send = cols[1].form_submit_button(submit_label)
+            if send and user_input:
+                return user_input
+    return None
+
 def load_dict(filename):
     with open(filename, 'r') as file:
         return json.load(file)
