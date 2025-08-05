@@ -287,7 +287,7 @@ for key, default in [
 if 'clicked' not in st.session_state:
     st.session_state.clicked = False
 
-questions=["How does the system work?"]
+questions=["How does the system work?","Tell me how the first advisor in text similarity model recommended?"]
 data_dict={}
 flag=0
 st.session_state["openai_model"] = "gpt-3.5-turbo"
@@ -402,8 +402,8 @@ elif st.session_state.page == "v1" or st.session_state.page == "v2":
                             msg="User name is "+ name+". User reseach interests are "+keywords+". Top 3 recommended advisor list based on Cosine similarity:\n"
                             for i in range(len(data_dict['Ranking'])):
                                 msg+=str(i+1)+'. name: '+ data_dict['Name'][i]
-                                if i==0:
-                                        st.session_state.questions.append(f"Why was Dr. {data_dict['Name'][i]} recommended?")
+                                #if i==0:
+                                #        st.session_state.questions.append(f"Why was Dr. {data_dict['Name'][i]} recommended?")
                                 msg+='. Cosine similarity score: '+str(data_dict['Similarity Score'][i])
                                 msg+='. Keywords: '+data_dict['Keywords'][i]+'\n'
                                 msg+='. Publication: '+data_dict['Publication'][i]+'\n'
