@@ -611,22 +611,29 @@ You are now ready to answer the user’s questions about their recommended gradu
                                                         st.rerun()
                                                         
                                                 
-                            if prompt := st.chat_input("Example: 1. Tell me the research interests of the recommended advisor based on cosine similarity. \n2. Tell me why 'X' is recommended.\n 3. What is cosine similarity."):
-                                st.session_state.messages.append({"role": "user", "content": prompt})
-                                with st.chat_message("user",avatar="👦"):
-                                    st.markdown(prompt)
-        
-                                with st.chat_message("assistant"):
-                                    stream = client.chat.completions.create(
-                                        model=st.session_state["openai_model"],
-                                        messages=[
-                                            {"role": m["role"], "content": m["content"]}
-                                            for m in st.session_state.messages
-                                        ],
-                                        stream=True,
-                                    )
-                                    response = st.write_stream(stream)
-                                st.session_state.messages.append({"role": "assistant", "content": response})
-        
-                                        
-        
+                            if st.session_state.question_asked<2:
+                                    if prompt := countdown_with_form(
+                                                    message="Please read carefully before interacting with the chatbot",
+                                                    duration_sec=COOLDOWN_TIME_LONG,
+                                                    form_key="freeform_followup",
+                                                    input_key="freeform_input"
+                                                )
+                                        #st.chat_input("Example: 1. Tell me the research interests of the recommended advisor based on cosine similarity. \n2. Tell me why 'X' is recommended.\n 3. What is cosine similarity."):
+                                        st.session_state.messages.append({"role": "user", "content": prompt})
+                                        with st.chat_message("user",avatar="👦"):
+                                            st.markdown(prompt)
+                
+                                        with st.chat_message("assistant"):
+                                            stream = client.chat.completions.create(
+                                                model=st.session_state["openai_model"],
+                                                messages=[
+                                                    {"role": m["role"], "content": m["content"]}
+                                                    for m in st.session_state.messages
+                                                ],
+                                                stream=True,
+                                            )
+                                            response = st.write_stream(stream)
+                                        st.session_state.messages.append({"role": "assistant", "content": response})
+                
+                                                
+                
