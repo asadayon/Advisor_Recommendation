@@ -552,6 +552,29 @@ You are now ready to answer the user’s questions about their recommended gradu
                         - **Latent Dirichlet Allocation (LDA):** A model that groups keywords into thematic clusters to identify research topics.
                         - **Count Vector:** A numerical representation of keywords, where each value indicates the presence or frequency of a keyword.
                         """)
+                            # Link to Quiz
+                            st.markdown("---")
+                        
+                            reveal_button_html = """
+                                <a href="https://quiz-rec.streamlit.app/" target="_blank">
+                                        <button style="
+                                            background-color:#4CAF50;
+                                            border:none;
+                                            color:white;
+                                            padding:10px 20px;
+                                            text-align:center;
+                                            text-decoration:none;
+                                            display:inline-block;
+                                            font-size:16px;
+                                            border-radius:5px;
+                                            cursor:pointer;">
+                                            Go to Quiz
+                                        </button>
+                                    </a>
+                                """
+                            countdown_component_html("Please read the given text carefully", COOLDOWN_TIME_LONG, reveal_button_html)
+
+                        
                 if st.session_state.page == "v2":
                         client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
                         if "messages"  in st.session_state:
