@@ -601,11 +601,15 @@ You are now ready to answer the user’s questions about their recommended gradu
                                     st.session_state.question_asked+=1                                  
                                     st.session_state.messages.append({"role": "assistant", "content": response})
                             if st.session_state.question_asked<2:
-                                                st.button(
-                                                st.session_state.questions[st.session_state.question_asked],
-                                                on_click=ask_and_advance,
-                                                args=(st.session_state.question_asked,)
-                                                    )
+                                                if countdown_with_button(
+                                                            message="Please read the generated text carefully",
+                                                            duration_sec=COOLDOWN_TIME_SHORT,
+                                                            button_label=questions[st.session_state.question_asked],
+                                                            button_key=f"followup_btn_{st.session_state.question_asked}"
+                                                        ):
+                                                ask_and_advance(st.session_state.question_asked)
+                                                st.rerun()
+                                                
                             if prompt := st.chat_input("Example: 1. Tell me the research interests of the recommended advisor based on cosine similarity. \n2. Tell me why 'X' is recommended.\n 3. What is cosine similarity."):
                                 st.session_state.messages.append({"role": "user", "content": prompt})
                                 with st.chat_message("user",avatar="👦"):
