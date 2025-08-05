@@ -374,7 +374,8 @@ elif st.session_state.page == "v1" or st.session_state.page == "v2":
         st.markdown("_Grad Stuedent Scenario:_")
         scenario = st.session_state.selected_scenarios[1]
         st.info(scenario)
-        keywords=st.text_input("Enter keywords of your reseach interest separated by comma and get system's recommendations")
+        st.markdown("Enter keywords of your reseach interest separated by comma and get system's recommendations.")
+        keywords = st.multiselect("Select symptoms:", options=options)
     if st.session_state.page == "v2":
         st.title("Grad Student Advisor Recommender System")
         st.subheader("Version 2 - Recommendation with AI Chatbot")
