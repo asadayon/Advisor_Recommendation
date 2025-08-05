@@ -149,7 +149,7 @@ def countdown_component_html(message, duration_sec, reveal_html):
 
     st.components.v1.html(html_code, height=120)
     
-    def countdown_with_button(message, duration_sec, button_label, button_key):
+def countdown_with_button(message, duration_sec, button_label, button_key):
     # Initialize countdown state
     if f"{button_key}_done" not in st.session_state:
         st.session_state[f"{button_key}_done"] = False
