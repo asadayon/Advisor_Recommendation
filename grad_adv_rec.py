@@ -458,7 +458,7 @@ Below is the **system design** as implemented:
      
                 """
                 prompt2="""**Expected Outcome:**
-Help users interpret why these advisors were recommended, how closely their research interests align, and how changes in keywords might affect the results.
+Help users interpret why these advisors were recommended, how closely their research interests align, and how changes in keywords might affect the results. Word counts more than 200.
 
 **Guidelines:**
 - Provide explanations in details why the advisors are recommended.
@@ -469,13 +469,13 @@ Help users interpret why these advisors were recommended, how closely their rese
   • How keyword similarity (cosine similarity) works like comparing the direction of two arrows.
   • How LDA groups keywords into research themes and compares distributions.
 - Explain why using both models gives a more robust match.
-- Provide Feature-Based Explanation: Explains how users individual research keywords contributed to the results. Provide example using users individual research keywords .
-- Counterfactual-Based Explanation: Shows how changing reseach keywords would alter predictions. Provide example using users individual research keywords .
-- Model Inner Working with Simple Example: Provides a basic calculation with example of how the system makes decisions. Provide example such as [kw1, kw2,..] to vector using users individual research keywords then calculate similarity and LDA.
+- Provide Feature-Based Explanation: Explains how users individual research keywords contributed to the results. Provide example using users individual research keywords contributes from rank 1 to rank 3 similar advisor.
+- Counterfactual-Based Explanation: Shows how changing reseach keywords would alter predictions. Provide example using users individual research keywords change can make rank 3 to rank 1.
+- Model Inner Working with Simple Example: Provides a basic calculation with example of how the system makes decisions. Provide example such as [kw1, kw2,..] to vector using users individual research keywords. Then a similarity score example using dot product. Also a LDA group of words.
 
-**For Scenario-Specific Questions** (e.g., *"Why was Dr. X recommended?"*):
+**For Scenario-Specific Questions** (e.g., *"Why the top advisor recommended?"*):
 - Explain how the user’s keywords closely matched the advisor’s keywords or topics.
-- Show which terms contributed to high similarity.
+- Show which terms contributed to high similarity. Show a dot product calculation.
 - Mention concrete alignment in research themes.
 - Highlight key differences between text vs. topic model rankings.
 - Give “what-if” examples—how changing or refining keywords might change recommendations.
@@ -490,7 +490,8 @@ You are now ready to answer the user’s questions about their recommended gradu
                             model=st.session_state["openai_model"],
                             messages=[
                                 {"role": "system", "content": msg+prompt}
-                            ]
+                            ],
+                            temperature=0.3
                         )
                 response=response.choices[0].message.content
                 st.session_state.messages.append({"role": "assistant", "content": response})
@@ -635,6 +636,7 @@ You are now ready to answer the user’s questions about their recommended gradu
                                                     {"role": m["role"], "content": m["content"]}
                                                     for m in st.session_state.messages
                                                 ],
+                                                temperature=0.3, 
                                                 stream=True,
                                             )
                                             response = st.write_stream(stream)
