@@ -2,7 +2,7 @@ Emily Zhang, a Computer Science Master's graduate, is seeking a Ph.D. advisor wh
 
 ---
 
-Sara Lee is interested in joining a Ph.D. program to study how **online communities** form and interact through **websites** and **web pages**. She wants to explore how groups of related websites connect, and how some are used to spread **web spam** or manipulate search engines. Her goal is to develop tools to better detect and understand these web communities**. She is looking for an advisor who works on **web mining**, online community analysis, and detecting spammy website networks.
+Sara Lee is interested in joining a Ph.D. program to study how **online communities** form and interact through **websites** and **web pages**. She wants to explore how groups of related websites connect, and how some are used to spread **web spam** or manipulate search engines. Her goal is to develop tools to better detect and understand these web communities. She is looking for an advisor who works on **web mining**, online community analysis, and detecting spammy website networks.
 
 
 ---
