@@ -494,6 +494,7 @@ You are now ready to answer the user’s questions about their recommended gradu
                             temperature=0.3
                         )
                 response=response.choices[0].message.content
+                print(msg)
                 st.session_state.messages.append({"role": "assistant", "content": response})
                     #connection = connect_to_db()
                     #insert_message(connection, "LLM", response)
