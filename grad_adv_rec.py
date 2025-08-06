@@ -106,7 +106,7 @@ def cosine_recommender(doc):
     return data_str
 
 
-COOLDOWN_TIME_LONG = 120
+COOLDOWN_TIME_LONG = 45
 COOLDOWN_TIME_SHORT = 30
 import time
 from datetime import datetime, timedelta
