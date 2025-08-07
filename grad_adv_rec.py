@@ -391,11 +391,11 @@ elif st.session_state.page == "v1" or st.session_state.page == "v2":
         st.info(scenario)
         st.markdown("Enter keywords of your reseach interest separated by comma and get system's recommendations.")
         keywords = st.multiselect("Select Research Keywords:", options=options)
+        if not st.session_state.prediction_ready:
+                render_spacer()
         
 
     if st.button("Predict"):
-        if not st.session_state.prediction_ready:
-                render_spacer()
         if len(keywords) < 1:
             st.warning("Please select at least one keyword.")
         else:
