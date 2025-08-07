@@ -541,7 +541,7 @@ You are now ready to answer the user’s questions about their recommended gradu
                 width="large",
                 required=True,
                 ),})
-                st.write("Clicking individual cell would provide detail texts.")
+                st.write("Double clicking individual cell will provide detail texts.")
                 if st.session_state.page == "v1":
                         st.markdown("---")
                         
