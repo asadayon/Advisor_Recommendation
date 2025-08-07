@@ -515,32 +515,33 @@ You are now ready to answer the user’s questions about their recommended gradu
                 df3 = pd.DataFrame(st.session_state["lda2"])
                 
                 #left_column, right_column = st.columns(2)
-                left_column, right_column = st.tabs(["Text Similarity", "Topic Similarity"])
-                with left_column:
-                    df1_new = df1[['Ranking','Name','Publication','Affiliation']]                
-                    df1_new = df1_new.to_dict(orient='records')
-                    st.write("Top 3 recommended advisor based on Text Similarity of keywords:")
-                    st.dataframe(df1_new, hide_index=True,  column_config={
-                    "Publication": st.column_config.Column(
-                        width="large",
-                        required=True,
-                    ),
-                     "Affiliation": st.column_config.Column(
-                        width="medium",
-                        required=True,
-                    )
+                #left_column, right_column = st.tabs(["Text Similarity", "Topic Similarity"])
+                #with left_column:
+                st.write("Text Similarity")
+                df1_new = df1[['Ranking','Name','Publication','Affiliation']]                
+                df1_new = df1_new.to_dict(orient='records')
+                st.write("Top 3 recommended advisor based on Text Similarity of keywords:")
+                st.dataframe(df1_new, hide_index=True,  column_config={
+                "Publication": st.column_config.Column(
+                width="large",
+                required=True,
+                ),
+                "Affiliation": st.column_config.Column(
+                width="medium",
+                required=True,
+                )
                 },)
 
-
-                with right_column:
-                    st.write("Top 3 recommended advisor based on LDA Topic Similarity of 30 topics:")
-                    df2_new = df2[['LDA_rank','LDA_Name','Publication','Affiliation']] 
-                    df2_new = df2_new.to_dict(orient='records')
-                    st.dataframe(df2_new,hide_index=True, column_config={
-                    "LDA_rank": "Ranking","LDA_Name": "Name", "Publication": st.column_config.Column(
-                        width="large",
-                        required=True,
-                    ),})
+                st.write("Topic Similarity")
+                #with right_column:
+                st.write("Top 3 recommended advisor based on LDA Topic Similarity of 30 topics:")
+                df2_new = df2[['LDA_rank','LDA_Name','Publication','Affiliation']] 
+                df2_new = df2_new.to_dict(orient='records')
+                st.dataframe(df2_new,hide_index=True, column_config={
+                "LDA_rank": "Ranking","LDA_Name": "Name", "Publication": st.column_config.Column(
+                width="large",
+                required=True,
+                ),})
                 if st.session_state.page == "v1":
                         st.markdown("---")
                         
