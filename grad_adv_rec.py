@@ -61,7 +61,12 @@ def top_similar_doc_cosine(count_vec,doc,k=3):
             lst[i] = cosine_similarity(count_vec[i], user_count_vector(doc))
         top_similar_doc = nlargest(k, lst, key = lst.get)
         return lst,top_similar_doc
-
+def render_spacer():
+    st.markdown("""
+    <div style='min-height: 250px; overflow-y: auto; padding: 10px;'>
+                <h1></h1>
+    </div>
+    """, unsafe_allow_html=True)
 
 def cosine_recommender(doc):
     # Read data from stdin
@@ -389,6 +394,8 @@ elif st.session_state.page == "v1" or st.session_state.page == "v2":
         
 
     if st.button("Predict"):
+        if not st.session_state.prediction_ready:
+                render_spacer()
         if len(keywords) < 1:
             st.warning("Please select at least one keyword.")
         else:
