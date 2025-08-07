@@ -391,8 +391,7 @@ elif st.session_state.page == "v1" or st.session_state.page == "v2":
         st.info(scenario)
         st.markdown("Enter keywords of your reseach interest separated by comma and get system's recommendations.")
         keywords = st.multiselect("Select Research Keywords:", options=options)
-        if not st.session_state.prediction_ready:
-                render_spacer()
+        
         
 
     if st.button("Predict"):
@@ -508,7 +507,8 @@ You are now ready to answer the user’s questions about their recommended gradu
                     #connection.close()
                 
                     
-                
+    if not st.session_state.prediction_ready:
+                render_spacer()            
     if st.session_state.prediction_ready:
                 df1 = pd.DataFrame(st.session_state["flag"])
                 df2 = pd.DataFrame(st.session_state["lda1"])
