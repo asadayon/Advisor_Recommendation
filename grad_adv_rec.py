@@ -602,18 +602,23 @@ You are now ready to answer the user’s questions about their recommended gradu
                                         st.markdown(message["content"])
                             def ask_and_advance(i):
                                     st.session_state.messages.append({"role": "user", "content": st.session_state.questions[i]})
-                                    def stream_chunks():
-                                            for chunk in client.chat.completions.create(
-                                                model=st.session_state["openai_model"],
-                                                messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages],
-                                                stream=True,
-                                            ):
-                                                # OpenAI-style chunk: choices[0].delta.content
-                                                if chunk and chunk.choices and chunk.choices[0].delta:
-                                                    piece = chunk.choices[0].delta.get("content") or ""
-                                                    if piece:
-                                                        yield piece
-                                    response = st.write_stream(stream_chunks())                               
+                                    def sse_stream():
+                                            with requests.post(API_URL, json={
+                                                "model": st.session_state["openai_model"],
+                                                "messages": [{"role": m["role"], "content": m["content"]} for m in st.session_state.messages],
+                                                "stream": True,
+                                            }, stream=True) as r:
+                                                r.raise_for_status()
+                                                for line in r.iter_lines(decode_unicode=True):
+                                                    if not line or not line.startswith("data:"):
+                                                        continue
+                                                    data = line[5:].strip()
+                                                    if data == "[DONE]":
+                                                        break
+                                                    # parse your server’s chunk schema here and yield text
+                                                    yield data  # or parsed_json["choices"][0]["delta"]["content"]
+
+                                    response = st.write_stream(sse_stream())                               
                                     st.session_state.question_asked+=1                                  
                                     st.session_state.messages.append({"role": "assistant", "content": response})
                             if st.session_state.question_asked<2:
