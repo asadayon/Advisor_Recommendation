@@ -295,7 +295,7 @@ if 'clicked' not in st.session_state:
 questions=["How does the system work?","Tell me how the first advisor in text similarity model recommended?"]
 data_dict={}
 flag=0
-st.session_state["openai_model"] = "gpt-3.5-turbo"
+st.session_state["openai_model"] = "llama3.3:70b-instruct-q8_0"    #"gpt-3.5-turbo"
 
 if st.session_state.page == "home":
     st.title("Grad Student Advisor Recommender System")
@@ -491,7 +491,7 @@ You are now ready to answer the user’s questions about their recommended gradu
                 """
                 st.session_state.messages = [{'role':'system', 'content':prompt+msg+prompt2}]
                     #response="Welcome "+name+"! Would you like an explanation of your recommendation for advisors?"
-                client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+                client = OpenAI(base_url=st.secrets["OPENAI_COMPAT_BASE_URL"], api_key=st.secrets["OPENAI_DUMMY_KEY"],)
                 response = client.chat.completions.create(
                             model=st.session_state["openai_model"],
                             messages=[
@@ -589,7 +589,7 @@ You are now ready to answer the user’s questions about their recommended gradu
 
                         
                 if st.session_state.page == "v2":
-                        client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+                        client = OpenAI(base_url=st.secrets["OPENAI_COMPAT_BASE_URL"],api_key=st.secrets["OPENAI_DUMMY_KEY"],)
                         if "messages"  in st.session_state:
                             for message in st.session_state.messages:
                                 if message['role']=='system':
