@@ -602,15 +602,18 @@ You are now ready to answer the user’s questions about their recommended gradu
                                         st.markdown(message["content"])
                             def ask_and_advance(i):
                                     st.session_state.messages.append({"role": "user", "content": st.session_state.questions[i]})
-                                    stream = client.chat.completions.create(
-                                        model=st.session_state["openai_model"],
-                                        messages=[
-                                            {"role": m["role"], "content": m["content"]}
-                                            for m in st.session_state.messages
-                                        ],
-                                        stream=True,
-                                    )
-                                    response = st.write_stream(stream)                               
+                                    def stream_chunks():
+                                            for chunk in client.chat.completions.create(
+                                                model=st.session_state["openai_model"],
+                                                messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages],
+                                                stream=True,
+                                            ):
+                                                # OpenAI-style chunk: choices[0].delta.content
+                                                if chunk and chunk.choices and chunk.choices[0].delta:
+                                                    piece = chunk.choices[0].delta.get("content") or ""
+                                                    if piece:
+                                                        yield piece
+                                    response = st.write_stream(stream_chunks())                               
                                     st.session_state.question_asked+=1                                  
                                     st.session_state.messages.append({"role": "assistant", "content": response})
                             if st.session_state.question_asked<2:
