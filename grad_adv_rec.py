@@ -19,7 +19,7 @@ lda_model = joblib.load('lda_model.pkl')
 vectorizer = joblib.load('vectorizer.pkl')
 doc_topic_matrix = joblib.load('doc_topic_matrix.pkl')
 options = ["software engineering", "software process", "software system", "software quality", "design debt", "case studies", "software development", "software evolution", "online communities", "websites", "web pages", "related websites", "web spam", "web communities", "web mining", "online community analysis", "spammy website networks", "rescue robots", "autonomous mobile robots", "autonomous mode", "tele-operation mode", "multiple robots", "mobile robot", "proposed system", "mobile applications", "mobile devices", "smart phones", "mobile Internet devices", "context information", "resource-constrained mobile devices", "mobile users", "mobile phone", "mobile devices adaptive"]
-
+API_URL= "http://m2025.cht77.com:1334/api/chat"
 
 count_vector={}
 with open('my_dict.json', 'r') as f:
