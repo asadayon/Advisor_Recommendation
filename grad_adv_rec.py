@@ -491,7 +491,7 @@ You are now ready to answer the user’s questions about their recommended gradu
                 """
                 st.session_state.messages = [{'role':'system', 'content':prompt+msg+prompt2}]
                     #response="Welcome "+name+"! Would you like an explanation of your recommendation for advisors?"
-                client = OpenAI(base_url=st.secrets["OPENAI_COMPAT_BASE_URL"], api_key=st.secrets["OPENAI_DUMMY_KEY"],)
+                client = OpenAI(base_url=st.secrets["OPENAI_COMPAT_BASE_URL"])
                 response = client.chat.completions.create(
                             model=st.session_state["openai_model"],
                             messages=[
@@ -589,7 +589,7 @@ You are now ready to answer the user’s questions about their recommended gradu
 
                         
                 if st.session_state.page == "v2":
-                        client = OpenAI(base_url=st.secrets["OPENAI_COMPAT_BASE_URL"],api_key=st.secrets["OPENAI_DUMMY_KEY"],)
+                        client = OpenAI(base_url=st.secrets["OPENAI_COMPAT_BASE_URL"])
                         if "messages"  in st.session_state:
                             for message in st.session_state.messages:
                                 if message['role']=='system':
