@@ -603,7 +603,7 @@ You are now ready to answer the user’s questions about their recommended gradu
 
                         
                 if st.session_state.page == "v2":
-                        client = OpenAI(base_url=st.secrets["OPENAI_COMPAT_BASE_URL"])
+                        
                         if "messages"  in st.session_state:
                             for message in st.session_state.messages:
                                 if message['role']=='system':
