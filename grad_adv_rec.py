@@ -19,7 +19,8 @@ lda_model = joblib.load('lda_model.pkl')
 vectorizer = joblib.load('vectorizer.pkl')
 doc_topic_matrix = joblib.load('doc_topic_matrix.pkl')
 options = ["software engineering", "software process", "software system", "software quality", "design debt", "case studies", "software development", "software evolution", "online communities", "websites", "web pages", "related websites", "web spam", "web communities", "web mining", "online community analysis", "spammy website networks", "rescue robots", "autonomous mobile robots", "autonomous mode", "tele-operation mode", "multiple robots", "mobile robot", "proposed system", "mobile applications", "mobile devices", "smart phones", "mobile Internet devices", "context information", "resource-constrained mobile devices", "mobile users", "mobile phone", "mobile devices adaptive"]
-API_URL= "http://m2025.cht77.com:1334/api/chat"
+API_URL= st.secrets["URL"]
+MODEL   = st.secrets["MODEL"] 
 
 count_vector={}
 with open('my_dict.json', 'r') as f:
@@ -67,6 +68,26 @@ def render_spacer():
                 <h1></h1>
     </div>
     """, unsafe_allow_html=True)
+
+def chat_stream():
+    """Send a message to the API and stream back the assistant's reply."""
+    headers = {"Content-Type": "application/json"}
+    payload = {
+        "model": MODEL,
+        "messages": [
+            {"role": m["role"], "content": m["content"]}
+                for m in st.session_state.messages
+                                                
+        ]
+    }
+    with requests.post(API_URL, headers=headers, data=json.dumps(payload), stream=True) as r:
+            for line in r.iter_lines():
+                if line:
+                    data = json.loads(line.decode("utf-8"))
+                    if "message" in data and "content" in data["message"]:
+                        yield data["message"]["content"]  # send token to Streamlit
+                    if data.get("done"):
+                        break
 
 def cosine_recommender(doc):
     # Read data from stdin
@@ -491,15 +512,8 @@ You are now ready to answer the user’s questions about their recommended gradu
                 """
                 st.session_state.messages = [{'role':'system', 'content':prompt+msg+prompt2}]
                     #response="Welcome "+name+"! Would you like an explanation of your recommendation for advisors?"
-                client = OpenAI(base_url=st.secrets["OPENAI_COMPAT_BASE_URL"])
-                response = client.chat.completions.create(
-                            model=st.session_state["openai_model"],
-                            messages=[
-                                {"role": "system", "content": msg+prompt}
-                            ],
-                            temperature=0.3
-                        )
-                response=response.choices[0].message.content
+                response = st.write_stream(chat_stream()) 
+
                 print(msg)
                 st.session_state.messages.append({"role": "assistant", "content": response})
                     #connection = connect_to_db()
@@ -601,24 +615,8 @@ You are now ready to answer the user’s questions about their recommended gradu
                                     with st.chat_message(message["role"]):
                                         st.markdown(message["content"])
                             def ask_and_advance(i):
-                                    st.session_state.messages.append({"role": "user", "content": st.session_state.questions[i]})
-                                    def sse_stream():
-                                            with requests.post(API_URL, json={
-                                                "model": st.session_state["openai_model"],
-                                                "messages": [{"role": m["role"], "content": m["content"]} for m in st.session_state.messages],
-                                                "stream": True,
-                                            }, stream=True) as r:
-                                                r.raise_for_status()
-                                                for line in r.iter_lines(decode_unicode=True):
-                                                    if not line or not line.startswith("data:"):
-                                                        continue
-                                                    data = line[5:].strip()
-                                                    if data == "[DONE]":
-                                                        break
-                                                    # parse your server’s chunk schema here and yield text
-                                                    yield data  # or parsed_json["choices"][0]["delta"]["content"]
-
-                                    response = st.write_stream(sse_stream())                               
+                                    st.session_state.messages.append({"role": "user", "content": st.session_state.questions[i]})                                 
+                                    response = st.write_stream(chat_stream())                               
                                     st.session_state.question_asked+=1                                  
                                     st.session_state.messages.append({"role": "assistant", "content": response})
                             if st.session_state.question_asked<2:
@@ -646,17 +644,8 @@ You are now ready to answer the user’s questions about their recommended gradu
                                         with st.chat_message("user",avatar="👦"):
                                             st.markdown(prompt)
                 
-                                        with st.chat_message("assistant"):
-                                            stream = client.chat.completions.create(
-                                                model=st.session_state["openai_model"],
-                                                messages=[
-                                                    {"role": m["role"], "content": m["content"]}
-                                                    for m in st.session_state.messages
-                                                ],
-                                                temperature=0.3, 
-                                                stream=True,
-                                            )
-                                            response = st.write_stream(stream)
+                                        with st.chat_message("assistant"):    
+                                            response = st.write_stream(chat_stream())
                                         st.session_state.messages.append({"role": "assistant", "content": response})
                                         st.rerun()
                 
