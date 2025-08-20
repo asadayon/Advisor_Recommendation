@@ -1,0 +1,112 @@
+{
+  "Amina Rahman": [
+    {
+      "question": "Why does the advisor recommendation system for Amina use both cosine similarity and LDA topic modeling?",
+        "options": [            
+            "To combine specific keyword matches with broader research theme alignment for robust recommendations",
+            "To ensure all advisors have the same ranking in both models"
+        ],
+      "answer": "1"
+    },
+    {
+      "question": "What does Oriana Riva’s cosine similarity score of 0.9104 indicate for Amina’s research interests in mobile applications?",
+        "options": [
+            "A weak alignment with Amina’s research interests",
+            "A strong alignment with Amina’s research interests"
+        ],
+      "answer": "2"
+    },
+    {
+      "question": "If Amina adds 'wearable sensor' to her keywords, which advisor might rise to the top in cosine similarity?",
+        "options": [
+            "Oriana Riva",
+            "Cory Cornelius"
+        ],
+      "answer": "2"
+    }
+  ],
+  "Emily Zhang": [
+    {
+       "question": "Why does the recommendation system use both cosine similarity and LDA topic modeling for Emily’s advisor recommendations?",
+        "options": [   
+            "Cosine similarity matches exact keywords, while LDA captures broader research themes.",
+            "Both models produce identical results to confirm advisor rankings."
+            
+        ],
+      "answer": "1"
+    },
+    {
+      "question": "What does a cosine similarity score of 0.9115042764715553 for Nico Zazworka indicate about Emily’s research interests?",
+        "options": [
+            "There is no alignment between Emily’s keywords and Nico Zazworka’s research profile.",
+            "Emily’s research interests are highly aligned with Nico Zazworka’s research profile."
+           
+        ],  
+      "answer": "2"
+    },
+    
+    {
+      "question": "If Emily removes 'software quality' from her keywords and adds 'machine learning,' how might this affect the cosine similarity ranking?",
+        "options": [
+            "Nico Zazworka would remain the top recommendation due to his focus on design debt.",
+            "Shari Lawrence Pfleeger might drop in ranking, as 'software quality' is a key overlap with her profile."
+        ],
+      "answer": "2"
+    }
+  ],
+  "David Chen": [
+    {
+      "question": "Why does the system use both cosine similarity and LDA topic modeling for David Chen’s advisor recommendations?",
+        "options": [
+            "To increase computational complexity",
+            "To provide a robust match by combining keyword and thematic alignment"
+        ],
+      "answer": "2"
+    },
+    {
+      "question": "What does a cosine similarity score of 0.9011 for Fumitoshi Matsuno indicate for David Chen?",
+        "options": [
+          "A strong alignment with David’s keyword vector",
+          "No alignment with David’s research interests"
+            
+        ],,
+      "answer": "1"
+    },
+    {
+     "question": "If David Chen removes ‘rescue robot’ from his keywords, what is the likely impact on the cosine similarity rankings?",
+        "options": [
+            
+            "Matsuno’s score will decrease, possibly dropping his rank",
+            "Imai’s score will increase significantly"
+         
+        ],
+      "answer": "1"
+    }
+  ],
+  "EmilyDavis": [
+    {
+      "question": "How does the system use symptoms like fever, chills, or muscle pain to figure out possible diseases and suggest a doctor?",
+      "options": [
+        "It combines votes from many decision trees to decide the most likely disease, then another model connects that disease to the right doctor.",
+        "It directly picks the disease that shows up first in its database and pairs it with the nearest available doctor."
+      ],
+      "answer": "1"
+    },
+    {
+      "question": "Why did the system predict malaria for Emily and recommend an internal medicine doctor?",
+      "options": [
+        "Because her symptoms like fever and chills pointed strongly to malaria, and the model then matched that illness to internal medicine.",
+        "Because heart doctors are not included in the system's list of doctors."
+      ],
+      "answer": "1"
+    },
+    {
+      "question": "If Emily's fever went away but she developed an itchy rash, how would the system likely respond?",
+      "options": [
+        "It would ignore the new rash and keep malaria as the top choice.",
+        "It would shift focus toward allergy-related conditions and recommend an allergist."
+      ],
+      "answer": "2"
+    }
+  ]
+}
