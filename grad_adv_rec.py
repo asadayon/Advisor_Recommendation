@@ -88,6 +88,40 @@ def chat_stream():
                         yield data["message"]["content"]  # send token to Streamlit
                     if data.get("done"):
                         break
+
+def stream_llm_api(history):
+    """
+    Streams assistant response from LLM API, chunk by chunk.
+    Yields text in real time for display in st.chat_message container.
+    """
+    payload = {
+        "model": MODEL,
+        "messages": history,
+        "stream": True
+    }
+    headers = {
+        "Content-Type": "application/json"
+    }
+
+    try:
+        with requests.post(API_URL, headers=headers, json=payload, stream=True, timeout=60) as resp:
+            resp.raise_for_status()
+            for line in resp.iter_lines(decode_unicode=True):
+                if line:
+                    try:
+                        obj = json.loads(line)
+                        chunk = obj.get("message", {}).get("content", "")
+                        if chunk:
+                            yield chunk
+                    except Exception as parse_err:
+                        print("⚠️ Chunk parsing error:", parse_err)
+                        continue
+    except requests.RequestException as e:
+        st.error(f"LLM stream error: {e}")
+        # raise RuntimeError(f"LLM stream failed: {e}")
+
+
+
 def make_quiz_system_prompt(question, options, correct_index, selected_symptoms, top_classes, top_probs, specialists, specialist_probs, scenario, core_system_knowledge=CORE_SYSTEM_KNOWLEDGE):
 
     formatted_options = "\n".join([f"{i+1}. {opt}" for i, opt in enumerate(options)])
