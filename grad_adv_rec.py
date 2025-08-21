@@ -11,7 +11,7 @@ import pandas as pd
 import requests
 import random
 import joblib
-from PreQuiz.prequiz import load_prequiz_questions
+from PreQuiz.prequiz import load_questions
 
 st.set_page_config("Advisor Recommendation", page_icon=":book:")
 data = pd.read_csv('updated_dataframe.csv')
