@@ -353,19 +353,10 @@ if st.session_state.page == "home":
         c1, c2 = st.columns(2, gap="large")
 
         with c1:
-            st.info("""**Version 1**: Recommendation only.
-                    \nGet Grad Advisor recommendations. 
-                        \nThe algorithms used in the system are explained briefly along with some key terms that you should familiarize yourself with.""")
-            if st.button("Go to Version 1"):
-                st.session_state.page = "v1"
-                st.rerun()
-                
-
-        with c2:
             st.info("""**Version 2**: Recommendation and AI Response.
                     \nEnter research keywords, and ask specified follow up questions.
                         \nYou can ask the AI-chatbot some pre-selected and any questions you want.""")
-            if st.button("Go to Version 2"):
+            if st.button("Go to Version 1"):
                 st.session_state.page = "v2"
                 # Clear any previous state for v2
                 st.session_state.prediction_ready = False
@@ -375,6 +366,14 @@ if st.session_state.page == "home":
                 st.session_state.explain_clicked = False
                 st.session_state.question_asked = 0
                 st.rerun()
+        with c2:
+            st.info("""**Version 1**: Recommendation only.
+                    \nGet Grad Advisor recommendations. 
+                        \nThe algorithms used in the system are explained briefly along with some key terms that you should familiarize yourself with.""")
+            if st.button("Go to Version 2"):
+                st.session_state.page = "v3"
+                st.rerun()
+                
                 
 
 elif st.session_state.page == "v1" or st.session_state.page == "v2":
