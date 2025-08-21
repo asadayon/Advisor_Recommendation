@@ -503,7 +503,7 @@ You are now ready to answer the user’s questions about their recommended gradu
                 """
                 st.session_state.messages = [{'role':'system', 'content':prompt+msg+prompt2}]
                     #response="Welcome "+name+"! Would you like an explanation of your recommendation for advisors?"
-                response = chat_stream()
+                response = st.write_stream(chat_stream())
 
                 #print(msg)
                 st.session_state.messages.append({"role": "assistant", "content": response})
