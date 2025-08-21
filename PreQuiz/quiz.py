@@ -1,5 +1,5 @@
 def load_questions(who):
-    if who=='Amina Rahman':
+    if who=='AminaRahman':
         return [
      {
       "question": "Why does the advisor recommendation system for Amina use both cosine similarity and LDA topic modeling?",
@@ -26,7 +26,7 @@ def load_questions(who):
       "answer": "2"
     }
 ]
-    elif who=='Emily Zhang':
+    elif who=='EmilyZhang':
         return [
      {
        "question": "Why does the recommendation system use both cosine similarity and LDA topic modeling for Emily’s advisor recommendations?",
@@ -56,7 +56,7 @@ def load_questions(who):
       "answer": "2"
     }
 ]
-    elif who=='David Chen':
+    elif who=='DavidChen':
         return [
     {
       "question": "Why does the system use both cosine similarity and LDA topic modeling for David Chen’s advisor recommendations?",
@@ -86,7 +86,7 @@ def load_questions(who):
       "answer": "1"
     }
 ]
-    if who=='Sara Lee':
+    if who=='SaraLee':
         return [
         
     {
