@@ -475,7 +475,9 @@ def render_v2_quiz_flow(questions, idx, scenario):
 def load_prequiz_questions(scenario):
     if "v2_quiz_questions" not in st.session_state:
         student_name = ("").join(scenario.split(" ")[:2])
+        print(student_name)
         resp = load_questions(student_name)
+        print(resp)
         st.session_state.v2_quiz_questions = resp
 
     return st.session_state.v2_quiz_questions
