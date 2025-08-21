@@ -292,6 +292,7 @@ def reset_version_state():
                 st.session_state.chat_history = []
                 st.session_state.chat_html = ""
                 st.session_state.explain_clicked = False
+                st.session_state.show_explain_option = False
                 st.session_state.question_asked = 0
 
 def load_scenarios(file_path):
@@ -369,7 +370,7 @@ if st.session_state.page == "home":
                 reset_version_state()
                 st.rerun()
         with c2:
-            st.info("""**Version 2**: Advisor Recommendation with AI-Assisted Pre-Quiz
+            st.info("""**Version 2**: Advisor Recommendation with AI-Assisted Pre-Quiz.
                     \nEnter your research keywords to receive advisor recommendations.
                     \nTake a short pre-quiz on the recommendation, AI will explain your choice and answer follow-up questions.""")
             if st.button("Go to Version 2"):
@@ -385,38 +386,26 @@ elif st.session_state.page == "v1" or st.session_state.page == "v2":
     with back_col:
         if st.button("← Back to Home"):
             st.session_state.page = "home"
-            st.session_state.prediction_ready = False
-            st.session_state.initial_prompt_sent = False
-            st.session_state.chat_history = []
-            st.session_state.chat_html = ""
-            st.session_state.explain_clicked = False
-            st.session_state.show_explain_option = False
-            st.session_state.question_asked = 0
+            reset_version_state()
             st.rerun()
-    
     if st.session_state.page == "v1":
         st.title("Grad Student Advisor Recommender System")
-        st.subheader("Version 1 - Recommendation Only")
+        st.subheader("Version 1 - Advisor Recommendation & AI Follow-up")
         st.divider()
-
         st.markdown("_Grad Stuedent Scenario:_")
-        scenario = st.session_state.selected_scenarios[1]
+        scenario = st.session_state.selected_scenarios[0]
         st.info(scenario)
         st.markdown("Enter keywords of your reseach interest separated by comma and get system's recommendations.")
         keywords = st.multiselect("Select Research Keywords:", options=options)
     if st.session_state.page == "v2":
         st.title("Grad Student Advisor Recommender System")
-        st.subheader("Version 2 - Recommendation with AI Chatbot")
+        st.subheader("**Version 2**: Advisor Recommendation with AI-Assisted Pre-Quiz")
         st.divider()
-
         st.markdown("_Grad Stuedent Scenario:_")
-        scenario = st.session_state.selected_scenarios[2]
+        scenario = st.session_state.selected_scenarios[1]
         st.info(scenario)
         st.markdown("Enter keywords of your reseach interest separated by comma and get system's recommendations.")
         keywords = st.multiselect("Select Research Keywords:", options=options)
-        
-        
-
     if st.button("Predict"):
         if len(keywords) < 1:
             st.warning("Please select at least one keyword.")
@@ -558,7 +547,7 @@ You are now ready to answer the user’s questions about their recommended gradu
                 required=True,
                 ),})
                 st.write("Double clicking individual cell will provide detail texts.")
-                if st.session_state.page == "v1":
+                if st.session_state.page == "v3":
                         st.markdown("---")
                         
                         st.markdown("## 📋 How the Advisor Recommender System Works")
@@ -604,7 +593,7 @@ You are now ready to answer the user’s questions about their recommended gradu
                         countdown_component_html("Please read the given text carefully", COOLDOWN_TIME_LONG, reveal_button_html)
 
                         
-                if st.session_state.page == "v2":
+                if st.session_state.page == "v1":
                         
                         if "messages"  in st.session_state:
                             for message in st.session_state.messages:
