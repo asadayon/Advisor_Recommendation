@@ -743,7 +743,7 @@ elif st.session_state.page == "v1" or st.session_state.page == "v2":
                 data_dict = json.loads(output)
                 
                 lda1,lda2=LDA(keywords)          
-                st.session_state["flag"] = data_dict
+                st.session_state["cosine"] = data_dict
                 with open('rec_result.txt', 'w') as f:
                             msg="User name is "+ name+". User reseach interests are "+keywords+". Top 3 recommended advisor list based on Cosine similarity:\n"
                             for i in range(len(data_dict['Ranking'])):
@@ -840,7 +840,7 @@ You are now ready to answer the user’s questions about their recommended gradu
     if not st.session_state.prediction_ready:
                 render_spacer()            
     if st.session_state.prediction_ready:
-                df1 = pd.DataFrame(st.session_state["flag"])
+                df1 = pd.DataFrame(st.session_state["cosine"])
                 df2 = pd.DataFrame(st.session_state["lda1"])
                 df3 = pd.DataFrame(st.session_state["lda2"])
                 
