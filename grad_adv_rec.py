@@ -371,7 +371,7 @@ if st.session_state.page == "home":
         with c2:
             st.info("""**Version 2**: Advisor Recommendation with AI-Assisted Pre-Quiz
                     \nEnter your research keywords to receive advisor recommendations.
-                    \nTake a short pre-quiz on the recommendation to spark your thinking, then the AI will explain your choice and answer follow-up questions.""")
+                    \nTake a short pre-quiz on the recommendation, AI will explain your choice and answer follow-up questions.""")
             if st.button("Go to Version 2"):
                 st.session_state.page = "v2"
                 reset_version_state()
