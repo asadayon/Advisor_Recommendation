@@ -306,7 +306,7 @@ def render_v2_quiz_flow(questions, idx, scenario):
             st.rerun()
 
 
-    correct = question['correct_index']
+    correct = question['answer']
     chosen = options.index(selected) + 1 if selected in options else None
 
     if chosen:
