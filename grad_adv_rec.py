@@ -145,17 +145,9 @@ def make_quiz_system_prompt(question, options, correct_index, selected_symptoms,
 
 def render_v2_quiz_flow(questions, idx, scenario):
     question = questions[idx]
-    qid = question['id']
-    st.markdown(f"#### Q{idx+1}: {question['prompt']}")
-
-    options = [
-        question.get('opt1'),
-        question.get('opt2'),
-        question.get('opt3'),
-        question.get('opt4')
-    ]
-    # Remove any that are None or empty string after stripping
-    options = [opt for opt in options if opt and str(opt).strip()]
+    qid = idx+1
+    st.markdown(f"#### Q{idx+1}: {question['question']}")
+    options = question["options"]
 
     selected_option_key = f"selected_option_q_{qid}"
     radio_key = f"option_radio_q_{qid}"
@@ -374,19 +366,13 @@ def render_v2_quiz_flow(questions, idx, scenario):
 
 def load_prequiz_questions(scenario):
     if "v2_quiz_questions" not in st.session_state:
-        patient_name = ("").join(scenario.split(" ")[:2])
-        resp = supabase.table("prequiz_questions") \
-            .select("id, prompt, opt1, opt2, opt3, opt4, correct_index") \
-            .eq("patient_name", patient_name) \
-            .order("id", desc=True) \
-            .limit(3) \
-            .execute()
-        sorted_data = sorted(resp.data, key=lambda x: x["id"])
-        st.session_state.v2_quiz_questions = sorted_data
+        student_name = ("").join(scenario.split(" ")[:2])
+        resp = load_questions(student_name)
+        st.session_state.v2_quiz_questions = resp
 
     return st.session_state.v2_quiz_questions
 
-def render_v2():
+def render_v2(scenario):
         questions = load_prequiz_questions(scenario)
         idx = st.session_state.get("v2_quiz_index", 0)
         total = len(questions)
