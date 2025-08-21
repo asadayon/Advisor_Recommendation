@@ -300,7 +300,7 @@ def render_v2_quiz_flow(questions, idx, scenario):
                         response_container.markdown(assistant_text + "▌")
                     response_container.markdown(assistant_text)
                     chat_history.append({"role": "assistant", "content": assistant_text})
-                    log_message("assistant", assistant_text)
+                    #log_message("assistant", assistant_text)
                 st.session_state[streaming_flag_key] = False  # done streaming
                 st.rerun()  # rerun so form can show next run
             except Exception as e:
