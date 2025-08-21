@@ -132,8 +132,8 @@ def cosine_recommender(doc):
     return data_str
 
 
-COOLDOWN_TIME_LONG = 45
-COOLDOWN_TIME_SHORT = 30
+COOLDOWN_TIME_LONG = 3
+COOLDOWN_TIME_SHORT = 5
 import time
 from datetime import datetime, timedelta
 
@@ -325,7 +325,7 @@ if 'clicked' not in st.session_state:
 questions=["How does the system work?","Tell me how the first advisor in text similarity model recommended?"]
 data_dict={}
 flag=0
-st.session_state["openai_model"] = "llama3.3:70b-instruct-q8_0"    #"gpt-3.5-turbo"
+
 
 if st.session_state.page == "home":
     st.title("Grad Student Advisor Recommender System")
@@ -503,10 +503,10 @@ You are now ready to answer the user’s questions about their recommended gradu
                 """
                 st.session_state.messages = [{'role':'system', 'content':prompt+msg+prompt2}]
                     #response="Welcome "+name+"! Would you like an explanation of your recommendation for advisors?"
-                response = st.write_stream(chat_stream()) 
+                #response = st.write_stream(chat_stream()) 
 
-                print(msg)
-                st.session_state.messages.append({"role": "assistant", "content": response})
+                #print(msg)
+                #st.session_state.messages.append({"role": "assistant", "content": response})
                     #connection = connect_to_db()
                     #insert_message(connection, "LLM", response)
                     #connection.close()
