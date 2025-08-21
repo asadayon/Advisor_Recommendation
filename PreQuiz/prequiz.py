@@ -1,4 +1,4 @@
-def load_questions(who):
+def load_prequiz_questions(who):
     if who=='Amina Rahman':
         return [
      {
