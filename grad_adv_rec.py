@@ -269,12 +269,8 @@ def render_v2_quiz_flow(questions, idx, scenario):
 
     if qid not in st.session_state.v2_sent_system_prompt:
         system_prompt = make_quiz_system_prompt(
-            question['prompt'], options, correct,
-            st.session_state.selected_symptoms_clean,
-            st.session_state.top_classes,
-            st.session_state.top_probs,
-            st.session_state.specialists,
-            st.session_state.specialists_pb,
+            question['question'], options, correct,
+            st.session_state.selected_keywords,
             scenario
         )
         chat_history.append({"role": "system", "content": system_prompt})
@@ -759,6 +755,7 @@ elif st.session_state.page == "v1" or st.session_state.page == "v2":
             import time
             name=st.session_state.user_name
             keywords = ", ".join(keywords[:-1]) + f", and {keywords[-1]}" if len(keywords) > 1 else keywords[0]
+            st.session_state["selected_keywords"] = keywords
             with st.spinner(text="Hello "+name+"! Please wait while we retrieve some information."):
                 output=cosine_recommender(keywords)           
                 data_dict = json.loads(output)
