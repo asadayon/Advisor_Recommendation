@@ -120,13 +120,32 @@ def stream_llm_api(history):
         st.error(f"LLM stream error: {e}")
         # raise RuntimeError(f"LLM stream failed: {e}")
 
+CORE_SYSTEM_KNOWLEDGE = """
+                        Our system is designed to help prospective graduate students find suitable research advisors by matching them based on shared research interests and publications. The system uses two models: a **Text Similarity Model** and a **Topic Similarity Model**, each generating the top three advisor recommendations based on the user’s input keywords.
+                        
+                        1. **Text Similarity Model (Cosine Similarity):**
+                           - Inputs: Research keywords provided by the user.
+                           - Each advisor’s research profile is represented as a numerical count vector of publication keywords.
+                           - Cosine similarity is calculated between the user’s keyword vector and each advisor’s vector.
+                           - Output: Top 3 advisors with the highest similarity scores (range: 0 to 1), where values closer to 1 indicate stronger alignment.
+                        
+                        2. **Topic Similarity Model (LDA Topic Modeling):**
+                           - Inputs: User’s research keywords mapped to 30 predefined LDA topics.
+                           - Each advisor has a topic distribution profile learned from their publication data.
+                           - The similarity between the user’s topic vector and each advisor’s topic profile is computed.
+                           - Output: Top 3 advisors with the most similar topic distributions.
+                           
+                           Results are displayed in two tabs: one for Text Similarity and one for Topic Similarity, each showing advisors’ names, affiliations, and publication details. The recommendations aim to foster meaningful academic collaborations by aligning students with advisors whose research interests are most compatible.
+                        """
 
-
-def make_quiz_system_prompt(question, options, correct_index, selected_symptoms, top_classes, top_probs, specialists, specialist_probs, scenario, core_system_knowledge=CORE_SYSTEM_KNOWLEDGE):
+def make_quiz_system_prompt(question, options, correct_index, selected_topic, scenario, core_system_knowledge=CORE_SYSTEM_KNOWLEDGE):
 
     formatted_options = "\n".join([f"{i+1}. {opt}" for i, opt in enumerate(options)])
+    data_dict=st.session_state["cosine"]
+    lda1=st.session_state["lda1"]
+    lda2=st.session_state["lda2"]
     prompt = f"""
-        You are acting as an **explanation assistant** for a research-grade Explainable AI (XAI) medical diagnosis recommender system.
+        You are acting as an **explanation assistant** for a Grad Student Advisor recommender system.
         You have full internal knowledge of how the system works.
 
         ---
@@ -134,18 +153,20 @@ def make_quiz_system_prompt(question, options, correct_index, selected_symptoms,
         {core_system_knowledge}
 
         ---
-        ## Current Patient Context
-        - Patient Scenario: {scenario}
-        - User reported symptoms: {', '.join(selected_symptoms)}
-        - Top 3 predicted diseases: 
-            1. {top_classes[0]} ({round(top_probs[0]*100, 2)}%)
-            2. {top_classes[1]} ({round(top_probs[1]*100, 2)}%)
-            3. {top_classes[2]} ({round(top_probs[2]*100, 2)}%)
-        - Recommended specialist: 
-            1. {specialists[0]} ({round(specialist_probs[0]*100, 2)}%)
-            2. {specialists[1]} ({round(specialist_probs[1]*100, 2)}%)
-        
-
+        ## Current Student Context
+        - Student Scenario: {scenario}
+        - User selected topics: {', '.join(selected_topic)}
+        - Top 3 recommended advisor list based on Cosine similarity:: 
+            1. Name: {data_dict['Name'][0]}; Cosine similarity score: {data_dict['Similarity Score'][0]};  Keywords: {data_dict['Keywords'][0]}; Publication: {data_dict['Publication'][0]}; Affiliaiton: {data_dict['Affiliation'][0]}
+            2. Name: {data_dict['Name'][1]}; Cosine similarity score: {data_dict['Similarity Score'][1]};  Keywords: {data_dict['Keywords'][1]}; Publication: {data_dict['Publication'][1]}; Affiliaiton: {data_dict['Affiliation'][1]}
+            3. Name: {data_dict['Name'][2]}; Cosine similarity score: {data_dict['Similarity Score'][2]};  Keywords: {data_dict['Keywords'][2]}; Publication: {data_dict['Publication'][2]}; Affiliaiton: {data_dict['Affiliation'][2]}
+        - Top 3 recommended advisor list based on LDA Topic modeling:: 
+            1. Name: {lda1['LDA_Name'][0]}; Cosine similarity score: {lda1['Score'][0]};  Keywords: {lda1['Keywords_LDA'][0]}; Publication: {lda1['Publication'][0]}; Affiliaiton: {lda1['Affiliation'][0]}
+            2. Name: {lda1['LDA_Name'][1]}; Cosine similarity score: {lda1['Score'][1]};  Keywords: {lda1['Keywords_LDA'][1]}; Publication: {lda1['Publication'][1]}; Affiliaiton: {lda1['Affiliation'][1]}
+            3. Name: {lda1['LDA_Name'][2]}; Cosine similarity score: {lda1['Score'][2]};  Keywords: {lda1['Keywords_LDA'][2]}; Publication: {lda1['Publication'][2]}; Affiliaiton: {lda1['Affiliation'][2]}
+        - Top LDA Topic selected:
+                Topic id: {lda2['Topic'][0]}
+                Keywords: {lda2['Words'][0]}
         ---
         ## Current Quiz Task
         The user is working through a **pre-quiz** designed to prepare them for a longer comprehension test.
@@ -167,8 +188,8 @@ def make_quiz_system_prompt(question, options, correct_index, selected_symptoms,
         
         ## Your Role & Style Guide
         - Your main goal is to help the user **understand the system reasoning** and explain why the selected options are either correct or not.
-        - Encourage step-by-step reasoning based on the system's predictions, confidence scores, and reasoning logic.
-        - Avoid generic medical advice; always tie reasoning back to **how this specific system** would think.
+        - Encourage step-by-step reasoning based on the system's recommendations, similarity scores, and reasoning logic.
+        - Avoid generic advice; always tie reasoning back to **how this specific system** would think.
         - Keep explanations **short, targeted, and context-aware** - no long lectures.
         - If the user asks follow up questions and seems unsure, ask small guiding questions rather than giving away the answer if they have not selected the correct option yet.
         - When explaining, use simple language and avoid technical jargon unless the user asks for it.
