@@ -285,7 +285,15 @@ def LDA(keywords):
     }
 
     return df1, df2
-        
+def reset_version_state():
+                # Clear any previous version state 
+                st.session_state.prediction_ready = False
+                st.session_state.initial_prompt_sent = False
+                st.session_state.chat_history = []
+                st.session_state.chat_html = ""
+                st.session_state.explain_clicked = False
+                st.session_state.question_asked = 0
+
 def load_scenarios(file_path):
     with open(file_path, "r", encoding="utf-8") as file:
         scenarios = file.read().split("---")  # "---" as a separator
@@ -353,25 +361,20 @@ if st.session_state.page == "home":
         c1, c2 = st.columns(2, gap="large")
 
         with c1:
-            st.info("""**Version 2**: Recommendation and AI Response.
-                    \nEnter research keywords, and ask specified follow up questions.
-                        \nYou can ask the AI-chatbot some pre-selected and any questions you want.""")
+            st.info("""**Version 1**: Advisor Recommendation & AI Follow-up.
+                    \nEnter your research keywords to receive advisor recommendations.
+                        \nEngage with the AI chatbot by asking pre-selected follow-up questions or any additional questions you may have.""")
             if st.button("Go to Version 1"):
-                st.session_state.page = "v2"
-                # Clear any previous state for v2
-                st.session_state.prediction_ready = False
-                st.session_state.initial_prompt_sent = False
-                st.session_state.chat_history = []
-                st.session_state.chat_html = ""
-                st.session_state.explain_clicked = False
-                st.session_state.question_asked = 0
+                st.session_state.page = "v1"
+                reset_version_state()
                 st.rerun()
         with c2:
-            st.info("""**Version 1**: Recommendation only.
-                    \nGet Grad Advisor recommendations. 
-                        \nThe algorithms used in the system are explained briefly along with some key terms that you should familiarize yourself with.""")
+            st.info("""**Version 2**: Advisor Recommendation with AI-Assisted Pre-Quiz
+                    \nEnter your research keywords to receive advisor recommendations.
+                    \nTake a short pre-quiz on the recommendation to spark your thinking, then the AI will explain your choice and answer follow-up questions.""")
             if st.button("Go to Version 2"):
-                st.session_state.page = "v3"
+                st.session_state.page = "v2"
+                reset_version_state()
                 st.rerun()
                 
                 
