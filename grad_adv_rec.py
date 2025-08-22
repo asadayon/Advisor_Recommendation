@@ -12,6 +12,8 @@ import requests
 import random
 import joblib
 from PreQuiz.quiz import load_questions
+import time
+from datetime import datetime, timedelta
 
 st.set_page_config("Advisor Recommendation", page_icon=":book:")
 data = pd.read_csv('updated_dataframe.csv')
@@ -21,6 +23,9 @@ doc_topic_matrix = joblib.load('doc_topic_matrix.pkl')
 options = ["software engineering", "software process", "software system", "software quality", "design debt", "case studies", "software development", "software evolution", "online communities", "websites", "web pages", "related websites", "web spam", "web communities", "web mining", "online community analysis", "spammy website networks", "rescue robots", "autonomous mobile robots", "autonomous mode", "tele-operation mode", "multiple robots", "mobile robot", "proposed system", "mobile applications", "mobile devices", "smart phones", "mobile Internet devices", "context information", "resource-constrained mobile devices", "mobile users", "mobile phone", "mobile devices adaptive"]
 API_URL= st.secrets["URL"]
 MODEL   = st.secrets["MODEL"] 
+COOLDOWN_TIME_LONG = 3
+COOLDOWN_TIME_SHORT = 5
+NO_COOLDOWN = 0
 
 count_vector={}
 with open('my_dict.json', 'r') as f:
@@ -600,10 +605,7 @@ def cosine_recommender(doc):
     return data_str
 
 
-COOLDOWN_TIME_LONG = 3
-COOLDOWN_TIME_SHORT = 5
-import time
-from datetime import datetime, timedelta
+
 
 def countdown_component_html(message, duration_sec, reveal_html):
     # Initialize unlock_time only when not already set
