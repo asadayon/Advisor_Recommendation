@@ -410,6 +410,7 @@ def render_v2_quiz_flow(questions, idx, scenario):
         st.session_state.v2_sent_system_prompt[qid] = True
 
     # Render all messages excluding system
+    st.write(chat_history)
     for msg in chat_history:
         if msg["role"] != "system":
             with st.chat_message(msg['role']):
