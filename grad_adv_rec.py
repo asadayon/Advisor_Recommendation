@@ -270,6 +270,7 @@ You are now ready to answer the user’s questions about their recommended gradu
 
 def make_quiz_system_prompt(question, options, correct_index, selected_topic, scenario, core_system_knowledge=CORE_SYSTEM_KNOWLEDGE):
 
+    st.write("inside sys prompt")
     formatted_options = "\n".join([f"{i+1}. {opt}" for i, opt in enumerate(options)])
     data_dict=st.session_state["cosine"]
     lda1=st.session_state["lda1"]
@@ -326,6 +327,7 @@ def make_quiz_system_prompt(question, options, correct_index, selected_topic, sc
 
         Respond in a **supportive and educational tone**.
             """
+    st.write(prompt.strip())
     return prompt.strip()
 
 def render_v2_quiz_flow(questions, idx, scenario):
@@ -379,7 +381,6 @@ def render_v2_quiz_flow(questions, idx, scenario):
 
     correct = question['answer']
     chosen = options.index(selected) + 1 if selected in options else None
-    st.write(chosen)
     if chosen:
         if chosen == correct:
             st.success("✅ Correct!")
