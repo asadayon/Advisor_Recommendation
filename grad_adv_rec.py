@@ -163,7 +163,7 @@ def stream_llm_api(history):
     Streams assistant response from LLM API, chunk by chunk.
     Yields text in real time for display in st.chat_message container.
     """
-    st.write("inside LLM stream api")
+    
     payload = {
         "model": MODEL,
         "messages": history,
@@ -344,21 +344,15 @@ def render_v2_quiz_flow(questions, idx, scenario):
         st.session_state[selected_option_key] = None
 
     prev_selected = st.session_state[selected_option_key]
-    st.write(f"prev_selected: {prev_selected}")
-    st.write(f"radio key: {radio_key}")
-    st.write(f"selected_option_key: {selected_option_key}")
     st.markdown("__*Please select one of the options to know more about it.*__")
         
     selected = st.radio(
         "Select your answer:",
         options,
-        index=None,
+        index=index=options.index(prev_selected) if prev_selected in options else None,
         key=radio_key
     )
-    if selected:
-            st.write(f"You selected: {selected}")
-    if radio_key in st.session_state:
-            st.write(f"Session state for {radio_key}: {st.session_state[radio_key]}")
+
     if selected != prev_selected:
         st.session_state[selected_option_key] = selected
         chosen_index = options.index(selected) + 1 if selected in options else None
@@ -386,8 +380,7 @@ def render_v2_quiz_flow(questions, idx, scenario):
 
     correct = question['answer']
     chosen = options.index(selected) + 1 if selected in options else None
-    st.write(correct)
-    st.write(chosen)
+
     if chosen:
         if chosen == correct:
             st.success("✅ Correct!")
@@ -431,7 +424,6 @@ def render_v2_quiz_flow(questions, idx, scenario):
     # Only render form and collect input if this is the active quiz question AND not currently streaming
     
     if idx == st.session_state.v2_quiz_index:
-        st.write("Stream assistant response ")
         if st.session_state[streaming_flag_key]:
             try:
                 with st.chat_message("assistant"):
