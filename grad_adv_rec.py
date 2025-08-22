@@ -327,7 +327,7 @@ def make_quiz_system_prompt(question, options, correct_index, selected_topic, sc
 
         Respond in a **supportive and educational tone**.
             """
-    st.write(prompt.strip())
+    
     return prompt.strip()
 
 def render_v2_quiz_flow(questions, idx, scenario):
