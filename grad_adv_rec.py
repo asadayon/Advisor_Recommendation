@@ -355,7 +355,7 @@ def render_v2_quiz_flow(questions, idx, scenario):
         key=radio_key
     )
     if selected:
-            st.write("You selected: {selected})
+            st.write(f"You selected: {selected}")
     if selected != prev_selected:
         st.session_state[selected_option_key] = selected
         chosen_index = options.index(selected) + 1 if selected in options else None
