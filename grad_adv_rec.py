@@ -433,7 +433,6 @@ def render_v2_quiz_flow(questions, idx, scenario):
     if idx == st.session_state.v2_quiz_index:
         st.write("Stream assistant response ")
         if st.session_state[streaming_flag_key]:
-            s.write("Stream assistant response (no form)")
             try:
                 with st.chat_message("assistant"):
                     response_container = st.empty()
