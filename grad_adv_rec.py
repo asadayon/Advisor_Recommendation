@@ -1066,6 +1066,7 @@ You are now ready to answer the user’s questions about their recommended gradu
 
                 if st.session_state.page == "v2":
                         render_v2(st.session_state.selected_scenarios[1])
+                        st.rerun()
                 if st.session_state.page == "v1":
                         
                         if "messages"  in st.session_state:
