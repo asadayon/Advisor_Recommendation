@@ -429,7 +429,6 @@ def render_v2_quiz_flow(questions, idx, scenario):
                 with st.chat_message("assistant"):
                     response_container = st.empty()
                     assistant_text = ""
-                    st.write(chat_history)
                     for chunk in stream_llm_api(chat_history):
                         assistant_text += chunk
                         response_container.markdown(assistant_text + "▌")
