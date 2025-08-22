@@ -137,6 +137,7 @@ def initialize_v2():
             st.session_state.v2_sent_system_prompt = {}
             st.session_state.v2_initial_radio_set = {}
             st.session_state.v2_input_used = {}
+            st.rerun()
 
 def chat_stream():
     """Send a message to the API and stream back the assistant's reply."""
