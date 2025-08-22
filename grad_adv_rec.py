@@ -565,9 +565,6 @@ def load_prequiz_questions(scenario):
     return st.session_state.v2_quiz_questions
 
 def render_v2(scenario):
-        reset_lock_timer()
-        reset_prequiz_states()
-        initialize_v2()
         questions = load_prequiz_questions(scenario)
         idx = st.session_state.get("v2_quiz_index", 0)
         total = len(questions)
@@ -893,6 +890,9 @@ elif st.session_state.page == "v1" or st.session_state.page == "v2":
         if len(keywords) < 1:
             st.warning("Please select at least one keyword.")
         else:
+            reset_lock_timer()
+            reset_prequiz_states()
+            initialize_v2()
             import time
             name=st.session_state.user_name
             keywords = ", ".join(keywords[:-1]) + f", and {keywords[-1]}" if len(keywords) > 1 else keywords[0]
