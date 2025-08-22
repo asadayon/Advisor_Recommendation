@@ -172,7 +172,7 @@ def stream_llm_api(history):
     headers = {
         "Content-Type": "application/json"
     }
-    st.write(history)
+    
     try:
         with requests.post(API_URL, headers=headers, json=payload, stream=True, timeout=60) as resp:
             resp.raise_for_status()
