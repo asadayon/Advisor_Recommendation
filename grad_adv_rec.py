@@ -163,6 +163,7 @@ def stream_llm_api(history):
     Streams assistant response from LLM API, chunk by chunk.
     Yields text in real time for display in st.chat_message container.
     """
+    st.write("inside LLM stream api")
     payload = {
         "model": MODEL,
         "messages": history,
