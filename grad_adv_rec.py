@@ -344,15 +344,16 @@ def render_v2_quiz_flow(questions, idx, scenario):
         st.session_state[selected_option_key] = None
 
     prev_selected = st.session_state[selected_option_key]
-    st.write(prev_selected)
-
+    st.write(f"prev_selected: {prev_selected}")
+    st.write(f"radio key: {radio_key}")
+    st.write(f"selected_option_key: {selected_option_key}")
     st.markdown("__*Please select one of the options to know more about it.*__")
     options = ["Option 1", "Option 2", "Option 3"]
     selected = st.radio(
         "Select your answer:",
         options,
         index=None,
-        key="radio_button_1"
+        key=radio_key
     )
     if selected:
             st.write(f"You selected: {selected}")
