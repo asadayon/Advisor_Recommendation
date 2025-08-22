@@ -227,7 +227,7 @@ def make_system_prompt( selected_topic, scenario,core_system_knowledge=CORE_SYST
             Input:
              ## Current Student Context
         - Student Scenario: {scenario}
-        - User selected topics: {', '.join(selected_topic)}
+        - User selected topics: {selected_topic}
         - Top 3 recommended advisor list based on Cosine similarity:: 
             1. Name: {data_dict['Name'][0]}; Cosine similarity score: {data_dict['Similarity Score'][0]};  Keywords: {data_dict['Keywords'][0]}; Publication: {data_dict['Publication'][0]}; Affiliaiton: {data_dict['Affiliation'][0]}
             2. Name: {data_dict['Name'][1]}; Cosine similarity score: {data_dict['Similarity Score'][1]};  Keywords: {data_dict['Keywords'][1]}; Publication: {data_dict['Publication'][1]}; Affiliaiton: {data_dict['Affiliation'][1]}
