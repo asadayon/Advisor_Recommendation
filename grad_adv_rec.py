@@ -344,6 +344,7 @@ def render_v2_quiz_flow(questions, idx, scenario):
         st.session_state[selected_option_key] = None
 
     prev_selected = st.session_state[selected_option_key]
+    st.write(prev_selected)
 
     st.markdown("__*Please select one of the options to know more about it.*__")
 
@@ -353,8 +354,8 @@ def render_v2_quiz_flow(questions, idx, scenario):
         index=options.index(prev_selected) if prev_selected in options else None,
         key=radio_key
     )
-    if selected:
-            st.write(selected)
+    
+    st.write(selected)
     if selected != prev_selected:
         st.session_state[selected_option_key] = selected
         chosen_index = options.index(selected) + 1 if selected in options else None
