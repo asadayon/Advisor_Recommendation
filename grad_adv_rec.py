@@ -349,7 +349,7 @@ def render_v2_quiz_flow(questions, idx, scenario):
     selected = st.radio(
         "Select your answer:",
         options,
-        index=index=options.index(prev_selected) if prev_selected in options else None,
+        index=options.index(prev_selected) if prev_selected in options else None,
         key=radio_key
     )
 
