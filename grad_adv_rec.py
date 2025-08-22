@@ -350,6 +350,7 @@ def render_v2_quiz_flow(questions, idx, scenario):
     st.write("All session state keys:", list(st.session_state.keys()))
     st.markdown("__*Please select one of the options to know more about it.*__")
     options = ["Option 1", "Option 2", "Option 3"]
+    radio_key='hi'
     selected = st.radio(
         "Select your answer:",
         options,
