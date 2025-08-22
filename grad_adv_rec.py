@@ -68,6 +68,70 @@ def render_spacer():
                 <h1></h1>
     </div>
     """, unsafe_allow_html=True)
+def reset_lock_timer():
+    keys_to_delete = [
+        key for key in st.session_state.keys() 
+        if key.endswith("_done") or key.endswith("_end_time") or key == "unlock_time"
+    ]
+    for key in keys_to_delete:
+        del st.session_state[key]
+
+def render_back_button(page):
+    back_col, _ = st.columns([1, 4])
+    with back_col:
+        if st.button("← Back to Home"):
+            reset_common_state()
+            reset_lock_timer()
+            reset_prequiz_states()
+            if page == "v1":
+                st.session_state.followup_idx = 1
+            st.session_state.page = "home"
+            st.rerun()
+
+
+def reset_common_state():
+    st.session_state.prediction_ready = False
+    st.session_state.initial_prompt_sent = False
+    st.session_state.chat_history = []
+    st.session_state.chat_html = ""
+    st.session_state.explain_clicked = False
+    st.session_state.show_explain_option = False
+
+
+def reset_ai_state():
+    st.session_state.initial_prompt_sent = False
+    st.session_state.chat_history = []
+    st.session_state.chat_html = ""
+    st.session_state.explain_clicked = False
+
+def reset_prequiz_states():
+    keys_to_clear = [
+        "v2_quiz_index",
+        "v2_selected_options",
+        "v2_quiz_done",
+        "v2_chat_history_per_q",
+        "v2_sent_system_prompt",
+        "v2_initial_radio_set",
+        "v2_input_used",
+        "v2_quiz_questions"
+    ]
+    keys_to_clear += ["final_chat_history", "final_streaming", "v2_show_final_chat"]
+
+    # Also remove any selected option keys per question
+    for key in list(st.session_state.keys()):
+        if key.startswith("selected_option_q_") or key.startswith("option_radio_q_") or key.startswith("form_q_") or key.startswith("input_q_"):
+            keys_to_clear.append(key)
+
+    for key in keys_to_clear:
+        st.session_state.pop(key, None)
+def initialize_v2():
+            st.session_state.v2_quiz_index = 0
+            st.session_state.v2_selected_options = []
+            st.session_state.v2_quiz_done = False
+            st.session_state.v2_chat_history_per_q = {}
+            st.session_state.v2_sent_system_prompt = {}
+            st.session_state.v2_initial_radio_set = {}
+            st.session_state.v2_input_used = {}
 
 def chat_stream():
     """Send a message to the API and stream back the assistant's reply."""
@@ -483,6 +547,9 @@ def load_prequiz_questions(scenario):
     return st.session_state.v2_quiz_questions
 
 def render_v2(scenario):
+        reset_lock_timer()
+        reset_prequiz_states()
+        initialize_v2()
         questions = load_prequiz_questions(scenario)
         idx = st.session_state.get("v2_quiz_index", 0)
         total = len(questions)
