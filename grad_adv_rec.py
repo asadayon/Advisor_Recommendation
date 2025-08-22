@@ -423,8 +423,7 @@ def render_v2_quiz_flow(questions, idx, scenario):
         st.session_state[streaming_flag_key] = False
 
     # Only render form and collect input if this is the active quiz question AND not currently streaming
-    st.write(idx)
-    st.write(st.session_state.v2_quiz_index)
+    
     if idx == st.session_state.v2_quiz_index:
         if st.session_state[streaming_flag_key]:
             # Stream assistant response (no form)
