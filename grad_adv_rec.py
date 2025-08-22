@@ -467,7 +467,7 @@ def render_v2_quiz_flow(questions, idx, scenario):
             # For all but last question, show normal Next button
             if st.button("Next Question", key=f"next_btn_{idx}"):
                 st.session_state.v2_selected_options.append({
-                    "question_id": question['id'],
+                    "question_id": idx+1,
                     "selected": chosen,
                     "correct": correct
                 })
@@ -481,7 +481,7 @@ def render_v2_quiz_flow(questions, idx, scenario):
                 if st.button("Finish Quiz", key=f"finish_btn_{idx}"):
                     # Save last question answer before finishing
                     st.session_state.v2_selected_options.append({
-                        "question_id": question['id'],
+                        "question_id": idx+1,
                         "selected": chosen,
                         "correct": correct
                     })
