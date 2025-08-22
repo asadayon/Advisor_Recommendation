@@ -352,7 +352,7 @@ def render_v2_quiz_flow(questions, idx, scenario):
         "Select your answer:",
         options,
         index=None,
-        key=radio_key
+        key="radio_button_1"
     )
     if selected:
             st.write(f"You selected: {selected}")
