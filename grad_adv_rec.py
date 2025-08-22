@@ -95,7 +95,6 @@ def render_back_button(page):
 
 
 def reset_common_state():
-    st.session_state.prediction_ready = False
     st.session_state.initial_prompt_sent = False
     st.session_state.chat_history = []
     st.session_state.chat_html = ""
