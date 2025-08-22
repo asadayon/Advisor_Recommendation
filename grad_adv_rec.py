@@ -686,7 +686,7 @@ def countdown_with_form(message, duration_sec, form_key, input_key, submit_label
         placeholder = st.empty()
         for remaining in range(duration_sec, 0, -1):
             mins, secs = divmod(remaining, 60)
-            placeholder.markdown(f"**{message} — {mins:02d}:{secs:02d}**")
+            placeholder.markdown(f"**{message} - {mins:02d}:{secs:02d}**")
             time.sleep(1)
         placeholder.empty()
         st.session_state[f"{form_key}_done"] = True
