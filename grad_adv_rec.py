@@ -512,7 +512,9 @@ def render_v2_quiz_flow(questions, idx, scenario):
 
                 # Render final chat transcript so far
                 for msg in st.session_state.final_chat_history:
-                    if msg["role"] == "system" or msg["role"] == "dummy":
+                    if msg["role"] == "system":
+                        continue
+                    if msg["role"] == "dummy":
                         continue
 
                     with st.chat_message(msg["role"]):
