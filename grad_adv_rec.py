@@ -380,8 +380,7 @@ def render_v2_quiz_flow(questions, idx, scenario):
 
     correct = int(question['answer'])
     chosen = options.index(selected) + 1 if selected in options else None
-    st.write(correct)
-    st.write(chosen)
+ 
 
     if chosen:
         if chosen == correct:
