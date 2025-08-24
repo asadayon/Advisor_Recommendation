@@ -413,9 +413,9 @@ def render_v2_quiz_flow(questions, idx, scenario):
     # Render all messages excluding system
     
     for msg in chat_history:
-        if msg["role"] != "system" :
+        if msg["role"] == "system" :
                 continue
-        if msg["role"] != "dummy" :
+        if msg["role"] == "dummy" :
                 continue       
         with st.chat_message(msg['role']):
                 st.markdown(msg['content'])
