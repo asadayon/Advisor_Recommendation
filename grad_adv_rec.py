@@ -32,6 +32,44 @@ NO_COOLDOWN = 0
 
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
+
+        
+def start_session(user_name, scenario):
+    """
+    Start a new session for a given user and scenario.
+    Inserts a row into the 'session' table.
+    Returns the new session info (including generated session_id).
+    """
+    if not st.session_state.session_id:
+        resp = (
+            supabase.table("session")
+            .insert({
+                "user_name": user_name,
+                "scenario": scenario
+            })
+            .execute()
+        )
+        st.session_state["session_id"] = resp.data[0]["session_id"]
+
+
+def log_chat_message(role, content):
+    """
+    Insert a chat message into 'chat_message'.
+    If turn_number is None, it uses:
+      - next_turn() for role == 'user'
+      - current_turn() for role == 'assistant'
+    """
+    sid = st.session_state["session_id"]
+
+    payload = {
+        "session_id": sid,
+        "role": role,                   # 'user' | 'assistant' | 'system'
+        "content": content
+    }
+
+    return supabase.table("chat_message").insert(payload).execute()
+
+
 count_vector={}
 with open('my_dict.json', 'r') as f:
         count_vector = json.load(f)
@@ -105,6 +143,7 @@ def reset_common_state():
     st.session_state.chat_html = ""
     st.session_state.explain_clicked = False
     st.session_state.show_explain_option = False
+    st.session_state.session_id=None
 
 
 def reset_ai_state():
@@ -446,7 +485,7 @@ def render_v2_quiz_flow(questions, idx, scenario):
                         response_container.markdown(assistant_text + "▌")
                     response_container.markdown(assistant_text)
                     chat_history.append({"role": "assistant", "content": assistant_text})
-                    #log_message("assistant", assistant_text)
+                    log_chat_message("assistant", assistant_text)
                 st.session_state[streaming_flag_key] = False  # done streaming
                 st.rerun()  # rerun so form can show next run
             except Exception as e:
@@ -780,6 +819,7 @@ def reset_version_state():
                 st.session_state.explain_clicked = False
                 st.session_state.show_explain_option = False
                 st.session_state.question_asked = 0
+                st.session_state.session_id=None 
 
                 
 def render_v1(scenario):
@@ -859,8 +899,8 @@ def start_llm_chat(scenario, questions):
 
     # Append the streamed message to history (so it shows next rerun)
     st.session_state.chat_history.append({"role": "assistant", "content": assistant_text})
-    #log_message("user", questions[0])
-    #log_message("assistant", assistant_text)
+    log_chat_message("user", questions[0])
+    log_chat_message("assistant", assistant_text)
     st.rerun()  # force rerun so transcript now includes it
 
 def continue_llm_chat(questions):
@@ -1020,6 +1060,7 @@ elif st.session_state.page == "v1" or st.session_state.page == "v2":
         st.divider()
         st.markdown("_Grad Student Scenario:_")
         scenario = st.session_state.selected_scenarios[0]
+        start_session(st.session_state.user_name , " ".join(scenario.split()[:2]))
         st.info(scenario)
         st.markdown("Enter keywords of your reseach interest separated by comma and get system's recommendations.")
         keywords = st.multiselect("Select Research Keywords:", options=options)
@@ -1029,6 +1070,7 @@ elif st.session_state.page == "v1" or st.session_state.page == "v2":
         st.divider()
         st.markdown("_Grad Stuedent Scenario:_")
         scenario = st.session_state.selected_scenarios[1]
+        start_session(st.session_state.user_name , " ".join(scenario.split()[:2]))
         st.info(scenario)
         st.markdown("Enter keywords of your reseach interest separated by comma and get system's recommendations.")
         keywords = st.multiselect("Select Research Keywords:", options=options)
