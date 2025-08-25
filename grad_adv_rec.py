@@ -12,7 +12,7 @@ import requests
 import random
 import joblib
 from PreQuiz.quiz import load_questions
-import time
+import time, uuid
 from datetime import datetime, timedelta
 from supabase import create_client
 
