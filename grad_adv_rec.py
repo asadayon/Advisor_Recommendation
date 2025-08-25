@@ -249,16 +249,17 @@ Help users interpret why these advisors were recommended, how closely their rese
 - You can answer both **general** and **scenario-specific** questions.
 
 **For General Questions** (e.g., *"How does the system work?"*):
+- Tell a brief of how system works
 - Explain both models:
-  • How keyword similarity (cosine similarity) works like comparing the direction of two arrows.
+  • How keyword similarity (cosine similarity) works to recommend advisors.
   • How LDA groups keywords into research themes and compares distributions.
 - Explain why using both models gives a more robust match.
 
-**For Scenario-Specific Questions** (e.g., *"How the system takes research keywords and produces the results? How the top advisor "X" recommended?"*):
-- Explain how the user’s keywords closely matched the advisor’s keywords or topics.
+**For Scenario-Specific Questions** (e.g., *"How the top advisors from both models recommended?"*):
 - Show which terms contributed to high similarity. Provide example such as [kw1, kw2,..] to vector using users individual research keywords. Create vector like [1, 0, 1, 0] and Show a dot product calculation. Then a similarity score example using dot product.
+- Show LDA based top selected topic and how advisor is selected from the topic.
+- Explain how the user’s keywords closely matched the advisor’s keywords or topics.
 - Mention concrete alignment in research themes.
-- Also mention LDA based top selected topic and how advisors are selected from the topic.
 - Highlight key differences between text vs. topic model rankings.
 - Clarify what the similarity scores mean and that a lower score can still be meaningful in niche areas.
 
@@ -780,10 +781,11 @@ def render_v1(scenario):
     explain_container = st.empty()
     student_name = " ".join(scenario.split(" ")[:2])
     advisor_name=st.session_state["cosine"]['Name'][0]
+    advisor_name_1=st.session_state["lda1"]['LDA_Name'][0]
 
     questions = [
         "How does the system work?",
-        f"How does the system take research keywords and produce the results? How {advisor_name} is recommended?",
+        f"How {advisor_name_1} and {advisor_name_2} are recommended?",
         f"What if {student_name} had different keywords, how would that change the results?",
     ]
 
