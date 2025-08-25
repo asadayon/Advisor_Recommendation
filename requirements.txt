@@ -8,3 +8,5 @@ nltk
 OpenAI
 streamlit-aggrid
 mysql-connector-python
+supabase
+
