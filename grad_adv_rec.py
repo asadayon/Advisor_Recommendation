@@ -1075,6 +1075,7 @@ elif st.session_state.page == "v1" or st.session_state.page == "v2":
                             f.write(msg)
                 
                 st.session_state.prediction_ready=True
+                st.session_state.show_explain_option = True
                 msg="" 
                 with open('rec_result.txt', 'r') as f:
                                     for line in f:
