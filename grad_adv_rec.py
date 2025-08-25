@@ -249,7 +249,7 @@ Help users interpret why these advisors were recommended, how closely their rese
 - You can answer both **general** and **scenario-specific** questions.
 
 **For General Questions** (e.g., *"How does the system work?"*):
-- Tell a brief of how system works
+- Tell a brief of how advisors are recommended.
 - Explain both models:
   • How keyword similarity (cosine similarity) works to recommend advisors.
   • How LDA groups keywords into research themes and compares distributions.
