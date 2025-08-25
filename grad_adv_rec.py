@@ -781,7 +781,7 @@ def render_v1(scenario):
     student_name = " ".join(scenario.split(" ")[:2])
 
     questions = [
-        "How does the system work?"
+        "How does the system work?",
         f"How does the system take research keywords and produce the results? How {student_name} is recommended?",
         f"What if {student_name} had different keywords, how would that change the results?",
     ]
