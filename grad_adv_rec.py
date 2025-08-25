@@ -34,7 +34,7 @@ supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 
         
-def start_session(user_name, scenario):
+def start_session(user_name, scenario, version):
     """
     Start a new session for a given user and scenario.
     Inserts a row into the 'session' table.
@@ -45,7 +45,8 @@ def start_session(user_name, scenario):
             supabase.table("session")
             .insert({
                 "user_name": user_name,
-                "scenario": scenario
+                "scenario": scenario,
+                "version": version
             })
             .execute()
         )
@@ -1060,7 +1061,7 @@ elif st.session_state.page == "v1" or st.session_state.page == "v2":
         st.divider()
         st.markdown("_Grad Student Scenario:_")
         scenario = st.session_state.selected_scenarios[0]
-        start_session(st.session_state.user_name , " ".join(scenario.split()[:2]))
+        start_session(st.session_state.user_name , " ".join(scenario.split()[:2]), "v1")
         st.info(scenario)
         st.markdown("Enter keywords of your reseach interest separated by comma and get system's recommendations.")
         keywords = st.multiselect("Select Research Keywords:", options=options)
@@ -1070,7 +1071,7 @@ elif st.session_state.page == "v1" or st.session_state.page == "v2":
         st.divider()
         st.markdown("_Grad Stuedent Scenario:_")
         scenario = st.session_state.selected_scenarios[1]
-        start_session(st.session_state.user_name , " ".join(scenario.split()[:2]))
+        start_session(st.session_state.user_name , " ".join(scenario.split()[:2]), "v2")
         st.info(scenario)
         st.markdown("Enter keywords of your reseach interest separated by comma and get system's recommendations.")
         keywords = st.multiselect("Select Research Keywords:", options=options)
