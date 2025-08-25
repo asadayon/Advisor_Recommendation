@@ -1221,51 +1221,52 @@ You are now ready to answer the user’s questions about their recommended gradu
                         render_v2(st.session_state.selected_scenarios[1])
                        
                 if st.session_state.page == "v1":
+                        render_v1_explanation_flow(st.session_state.selected_scenarios[0]):
                         
-                        if "messages"  in st.session_state:
-                            for message in st.session_state.messages:
-                                if message['role']=='system':
-                                    continue
-                                if message['role']=='user':
-                                    with st.chat_message(message["role"],avatar="👦"):
-                                        st.markdown(message["content"])
-                                else:
-                                    with st.chat_message(message["role"]):
-                                        st.markdown(message["content"])
-                            def ask_and_advance(i):
-                                    st.session_state.messages.append({"role": "user", "content": st.session_state.questions[i]})                                 
-                                    response = st.write_stream(chat_stream())                               
-                                    st.session_state.question_asked+=1                                  
-                                    st.session_state.messages.append({"role": "assistant", "content": response})
-                            if st.session_state.question_asked<2:
-                                                if countdown_with_button(
-                                                            message="Please read the generated text carefully",
-                                                            duration_sec=COOLDOWN_TIME_SHORT,
-                                                            button_label=questions[st.session_state.question_asked],
-                                                            button_key=f"followup_btn_{st.session_state.question_asked}"
-                                                        ):
-                                                        ask_and_advance(st.session_state.question_asked)
-                                                        st.rerun()
+                        # if "messages"  in st.session_state:
+                        #     for message in st.session_state.messages:
+                        #         if message['role']=='system':
+                        #             continue
+                        #         if message['role']=='user':
+                        #             with st.chat_message(message["role"],avatar="👦"):
+                        #                 st.markdown(message["content"])
+                        #         else:
+                        #             with st.chat_message(message["role"]):
+                        #                 st.markdown(message["content"])
+                        #     def ask_and_advance(i):
+                        #             st.session_state.messages.append({"role": "user", "content": st.session_state.questions[i]})                                 
+                        #             response = st.write_stream(chat_stream())                               
+                        #             st.session_state.question_asked+=1                                  
+                        #             st.session_state.messages.append({"role": "assistant", "content": response})
+                        #     if st.session_state.question_asked<2:
+                        #                         if countdown_with_button(
+                        #                                     message="Please read the generated text carefully",
+                        #                                     duration_sec=COOLDOWN_TIME_SHORT,
+                        #                                     button_label=questions[st.session_state.question_asked],
+                        #                                     button_key=f"followup_btn_{st.session_state.question_asked}"
+                        #                                 ):
+                        #                                 ask_and_advance(st.session_state.question_asked)
+                        #                                 st.rerun()
                                                        
                                                         
                                                 
-                            if st.session_state.question_asked>=2:
-                                    prompt=countdown_with_form(
-                                                    message="Please read carefully before interacting with the chatbot",
-                                                    duration_sec=COOLDOWN_TIME_LONG,
-                                                    form_key="freeform_followup",
-                                                    input_key="freeform_input"
-                                                )
-                                    if prompt : 
-                                        #st.chat_input("Example: 1. Tell me the research interests of the recommended advisor based on cosine similarity. \n2. Tell me why 'X' is recommended.\n 3. What is cosine similarity."):
-                                        st.session_state.messages.append({"role": "user", "content": prompt})
-                                        with st.chat_message("user",avatar="👦"):
-                                            st.markdown(prompt)
+                        #     if st.session_state.question_asked>=2:
+                        #             prompt=countdown_with_form(
+                        #                             message="Please read carefully before interacting with the chatbot",
+                        #                             duration_sec=COOLDOWN_TIME_LONG,
+                        #                             form_key="freeform_followup",
+                        #                             input_key="freeform_input"
+                        #                         )
+                        #             if prompt : 
+                        #                 #st.chat_input("Example: 1. Tell me the research interests of the recommended advisor based on cosine similarity. \n2. Tell me why 'X' is recommended.\n 3. What is cosine similarity."):
+                        #                 st.session_state.messages.append({"role": "user", "content": prompt})
+                        #                 with st.chat_message("user",avatar="👦"):
+                        #                     st.markdown(prompt)
                 
-                                        with st.chat_message("assistant"):    
-                                            response = st.write_stream(chat_stream())
-                                        st.session_state.messages.append({"role": "assistant", "content": response})
-                                        st.rerun()
+                        #                 with st.chat_message("assistant"):    
+                        #                     response = st.write_stream(chat_stream())
+                        #                 st.session_state.messages.append({"role": "assistant", "content": response})
+                        #                 st.rerun()
                 
                                                 
                 
