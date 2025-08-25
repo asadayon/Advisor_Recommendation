@@ -779,7 +779,7 @@ def reset_version_state():
 def render_v1(scenario):
     explain_container = st.empty()
     student_name = " ".join(scenario.split(" ")[:2])
-    advisor_name=st.session_state["cosine"]["name"][0]
+    advisor_name=st.session_state["cosine"]['Name'][0]
 
     questions = [
         "How does the system work?",
