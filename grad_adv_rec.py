@@ -30,6 +30,8 @@ COOLDOWN_TIME_LONG = 3
 COOLDOWN_TIME_SHORT = 5
 NO_COOLDOWN = 0
 
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+
 count_vector={}
 with open('my_dict.json', 'r') as f:
         count_vector = json.load(f)
