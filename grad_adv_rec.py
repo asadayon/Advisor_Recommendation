@@ -1221,7 +1221,7 @@ You are now ready to answer the user’s questions about their recommended gradu
                         render_v2(st.session_state.selected_scenarios[1])
                        
                 if st.session_state.page == "v1":
-                        render_v1_explanation_flow(st.session_state.selected_scenarios[0]):
+                        render_v1_explanation_flow(st.session_state.selected_scenarios[0])
                         
                         # if "messages"  in st.session_state:
                         #     for message in st.session_state.messages:
