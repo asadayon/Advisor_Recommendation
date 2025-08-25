@@ -779,10 +779,11 @@ def reset_version_state():
 def render_v1(scenario):
     explain_container = st.empty()
     student_name = " ".join(scenario.split(" ")[:2])
+    advisor_name=st.session_state["cosine"]["name"][0]
 
     questions = [
         "How does the system work?",
-        f"How does the system take research keywords and produce the results? How {student_name} is recommended?",
+        f"How does the system take research keywords and produce the results? How {advisor_name} is recommended?",
         f"What if {student_name} had different keywords, how would that change the results?",
     ]
 
