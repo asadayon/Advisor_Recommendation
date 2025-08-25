@@ -785,8 +785,8 @@ def render_v1_explanation_flow(scenario):
         f"What if {patient_name} had different symptoms, how would that change the results?",
     ]
 
-    if DEBUG:
-        questions = ['Hi', 'Thank you','ok']
+    # if DEBUG:
+    #     questions = ['Hi', 'Thank you','ok']
     if st.session_state.show_explain_option:
         # explain_container.markdown("**Do you want a more detailed explanation?**")
         if countdown_with_button("Please read the results carefully", st.session_state.get("COOLDOWN_TIME_SHORT", COOLDOWN_TIME_SHORT), questions[0], "explain_btn"):
