@@ -774,6 +774,148 @@ def reset_version_state():
                 st.session_state.show_explain_option = False
                 st.session_state.question_asked = 0
 
+                
+def render_v1_explanation_flow(scenario):
+    explain_container = st.empty()
+    patient_name = scenario.split(" ")[0] if scenario.split(" ") else "the patient"
+
+    questions = [
+        "Can you explain how the system takes symptoms and produces the results?",
+        f"How did {patient_name} get these specific recommendations?",
+        f"What if {patient_name} had different symptoms, how would that change the results?",
+    ]
+
+    if DEBUG:
+        questions = ['Hi', 'Thank you','ok']
+    if st.session_state.show_explain_option:
+        # explain_container.markdown("**Do you want a more detailed explanation?**")
+        if countdown_with_button("Please read the results carefully", st.session_state.get("COOLDOWN_TIME_SHORT", COOLDOWN_TIME_SHORT), questions[0], "explain_btn"):
+            st.session_state.show_explain_option = False
+            st.session_state.explain_clicked = True
+            explain_container.empty()
+            st.rerun()
+
+    if st.session_state.explain_clicked:
+        st.markdown("### 💬 Explanation and Follow-ups")
+
+    chat_box = st.empty()
+    # if st.session_state.initial_prompt_sent or st.session_state.explain_clicked:
+    #     render_chat_styles(chat_box)
+
+    if st.session_state.explain_clicked:
+        chat_box = start_llm_chat(scenario, questions)
+
+    if st.session_state.initial_prompt_sent:
+        continue_llm_chat(questions)
+
+
+def render_chat_transcript():
+    """Render full transcript from session_state.chat_history (exclude system)."""
+    if "chat_history" not in st.session_state:
+        st.session_state.chat_history = []
+    for msg in st.session_state.chat_history:
+        if msg["role"] == "system":
+            continue
+        with st.chat_message(msg["role"]):
+            st.markdown(msg["content"])
+
+
+def start_llm_chat(scenario, questions):
+    # Build system prompt & initialize history
+    system_prompt = make_system_prompt(
+        st.session_state.selected_symptoms_clean,
+        st.session_state.top_classes,
+        st.session_state.top_probs,
+        st.session_state.specialists,
+        [round(x * 100, 2) for x in st.session_state.specialists_pb],
+        scenario,
+        core_system_knowledge=CORE_SYSTEM_KNOWLEDGE
+    )
+
+    st.session_state.chat_history = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": questions[0]}
+    ]
+    st.session_state.initial_prompt_sent = True
+    st.session_state.explain_clicked = False
+    st.session_state.followup_idx = 1  # reset index
+
+    # Always render what's in history first
+    render_chat_transcript()
+
+    # Stream only for the active question (first one)
+    with st.chat_message("assistant"):
+        response_container = st.empty()
+        assistant_text = ""
+        for chunk in stream_llm_api(st.session_state.chat_history):
+            assistant_text += chunk
+            response_container.markdown(assistant_text + "▌")
+        response_container.markdown(assistant_text)
+
+    # Append the streamed message to history (so it shows next rerun)
+    st.session_state.chat_history.append({"role": "assistant", "content": assistant_text})
+    log_message("user", questions[0])
+    log_message("assistant", assistant_text)
+    st.rerun()  # force rerun so transcript now includes it
+
+def continue_llm_chat(questions):
+    idx = st.session_state.followup_idx
+
+    # Initialize streaming flag if not set
+    if "is_streaming" not in st.session_state:
+        st.session_state.is_streaming = False
+
+    # Render the chat transcript so far
+    render_chat_transcript()
+
+    # If streaming is active, stream the assistant's reply now
+    if st.session_state.is_streaming:
+        with st.chat_message("assistant"):
+            response_container = st.empty()
+            assistant_text = ""
+            for chunk in stream_llm_api(st.session_state.chat_history):
+                assistant_text += chunk
+                response_container.markdown(assistant_text + "▌")
+            response_container.markdown(assistant_text)
+        
+        # Update streaming flag and rerun after done
+        st.session_state.is_streaming = False
+        st.session_state.chat_history.append({"role": "assistant", "content": assistant_text})
+        st.rerun()
+
+    # Only if not streaming, render buttons/forms for next user input
+    else:
+        def ask_and_advance(q):
+            # Add user message
+            st.session_state.chat_history.append({"role": "user", "content": q})
+            st.session_state.is_streaming = True  # Set streaming flag to True for next rerun
+            st.session_state.followup_idx += 1
+            st.rerun()
+
+        # Scripted questions buttons
+        if idx < len(questions):
+            if countdown_with_button(
+                message="Please read the generated text carefully",
+                duration_sec=st.session_state.get("COOLDOWN_TIME_LONG", COOLDOWN_TIME_LONG),
+                button_label=questions[idx],
+                button_key=f"followup_btn_{idx}"
+            ):
+                ask_and_advance(questions[idx])
+        # Free-form input
+        else:
+            st.markdown("---")
+            st.markdown("#### 📝 Do you have any other questions?")
+            user_input = countdown_with_form(
+                message="Please read carefully before interacting with the chatbot",
+                duration_sec=st.session_state.get("COOLDOWN_TIME_LONG", COOLDOWN_TIME_LONG),
+                form_key="freeform_followup",
+                input_key="freeform_input"
+            )
+            if user_input:
+                ask_and_advance(user_input)
+
+
+        
 def load_scenarios(file_path):
     with open(file_path, "r", encoding="utf-8") as file:
         scenarios = file.read().split("---")  # "---" as a separator
