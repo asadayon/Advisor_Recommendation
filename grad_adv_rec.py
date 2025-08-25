@@ -866,6 +866,8 @@ def render_chat_transcript():
     for msg in st.session_state.chat_history:
         if msg["role"] == "system":
             continue
+        if msg["role"] == "dummy":
+            continue
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
 
@@ -880,6 +882,7 @@ def start_llm_chat(scenario, questions):
 
     st.session_state.chat_history = [
         {"role": "system", "content": system_prompt},
+        {"role": "dummy", "content": 'dummy'},
         {"role": "user", "content": questions[0]}
     ]
     st.session_state.initial_prompt_sent = True
