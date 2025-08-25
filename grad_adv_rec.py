@@ -854,8 +854,8 @@ def start_llm_chat(scenario, questions):
 
     # Append the streamed message to history (so it shows next rerun)
     st.session_state.chat_history.append({"role": "assistant", "content": assistant_text})
-    log_message("user", questions[0])
-    log_message("assistant", assistant_text)
+    #log_message("user", questions[0])
+    #log_message("assistant", assistant_text)
     st.rerun()  # force rerun so transcript now includes it
 
 def continue_llm_chat(questions):
