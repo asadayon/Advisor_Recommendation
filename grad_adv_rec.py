@@ -253,17 +253,18 @@ Help users interpret why these advisors were recommended, how closely their rese
   • How keyword similarity (cosine similarity) works like comparing the direction of two arrows.
   • How LDA groups keywords into research themes and compares distributions.
 - Explain why using both models gives a more robust match.
+
+**For Scenario-Specific Questions** (e.g., *"How the system takes research keywords and produces the results? How the top advisor "X" recommended?"*):
+- Explain how the user’s keywords closely matched the advisor’s keywords or topics.
+- Show which terms contributed to high similarity. Provide example such as [kw1, kw2,..] to vector using users individual research keywords. Create vector like [1, 0, 1, 0] and Show a dot product calculation. Then a similarity score example using dot product.
+- Mention concrete alignment in research themes.
+- Also mention LDA based top selected topic and how advisors are selected from the topic.
+- Highlight key differences between text vs. topic model rankings.
+- Clarify what the similarity scores mean and that a lower score can still be meaningful in niche areas.
+
+When asked **what-if scenarios** or asked for result explanations: (like: *"What if User had [different keywords]?"*, *Can you explain the results?*):
 - Provide Feature-Based Explanation: Explains how users individual research keywords contributed to the results. Provide example using users individual research keywords contributes from rank 1 to rank 3 similar advisor.
 - Counterfactual-Based Explanation: Shows how changing reseach keywords would alter predictions. Provide example using users individual research keywords change can make rank 3 to rank 1.
-- Model Inner Working with Simple Example: Provides a basic calculation with example of how the system makes decisions. Provide example such as [kw1, kw2,..] to vector using users individual research keywords. Then a similarity score example using dot product. Also a LDA group of words.
-
-**For Scenario-Specific Questions** (e.g., *"Why the top advisor recommended?"*):
-- Explain how the user’s keywords closely matched the advisor’s keywords or topics.
-- Show which terms contributed to high similarity. Show a dot product calculation.
-- Mention concrete alignment in research themes.
-- Highlight key differences between text vs. topic model rankings.
-- Give “what-if” examples—how changing or refining keywords might change recommendations.
-- Clarify what the similarity scores mean and that a lower score can still be meaningful in niche areas.
 
 You are now ready to answer the user’s questions about their recommended graduate advisors.
         """.strip()
@@ -309,7 +310,7 @@ def make_quiz_system_prompt(question, options, correct_index, selected_topic, sc
         Options:
         {formatted_options}
 
-        The correct answer is **option {correct_index}**. The user will select one of the options and you will provide feedback based on their selection.
+        The correct answer is **option {str(correct_index)}**. The user will select one of the options and you will provide feedback based on their selection.
 
         ---
         ## Special Instructions
@@ -777,11 +778,11 @@ def reset_version_state():
                 
 def render_v1(scenario):
     explain_container = st.empty()
-    student_name = scenario.split(" ")[:2]
+    student_name = " ".join(scenario.split(" ")[:2])
 
     questions = [
-        "Can you explain how the system takes research keywords and produces the results?",
-        f"Explain the similarity scores for the top recommended advisor. Also explain the selected topic and top selected advisor based on the selected topic.",
+        "How does the system work?"
+        "How does the system take research keywords and produce the results? How {student_name} is recommended?",
         f"What if {student_name} had different keywords, how would that change the results?",
     ]
 
