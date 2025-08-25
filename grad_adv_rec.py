@@ -775,14 +775,14 @@ def reset_version_state():
                 st.session_state.question_asked = 0
 
                 
-def render_v1_explanation_flow(scenario):
+def render_v1(scenario):
     explain_container = st.empty()
-    patient_name = scenario.split(" ")[0] if scenario.split(" ") else "the patient"
+    student_name = scenario.split(" ")[:2]
 
     questions = [
-        "Can you explain how the system takes symptoms and produces the results?",
-        f"How did {patient_name} get these specific recommendations?",
-        f"What if {patient_name} had different symptoms, how would that change the results?",
+        "Can you explain how the system takes research keywords and produces the results?",
+        f"Explain the similarity scores for the top recommended advisor. Also explain the selected topic and top selected advisor based on the selected topic.",
+        f"What if {student_name} had different keywords, how would that change the results?",
     ]
 
     # if DEBUG:
@@ -823,12 +823,8 @@ def render_chat_transcript():
 def start_llm_chat(scenario, questions):
     # Build system prompt & initialize history
     system_prompt = make_system_prompt(
-        st.session_state.selected_symptoms_clean,
-        st.session_state.top_classes,
-        st.session_state.top_probs,
-        st.session_state.specialists,
-        [round(x * 100, 2) for x in st.session_state.specialists_pb],
-        scenario,
+        st.session_state.selected_keywords,
+                    scenario,
         core_system_knowledge=CORE_SYSTEM_KNOWLEDGE
     )
 
