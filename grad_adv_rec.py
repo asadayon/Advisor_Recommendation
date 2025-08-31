@@ -1208,6 +1208,10 @@ You are now ready to answer the user’s questions about their recommended gradu
                 width="large",
                 required=True,
                 ),
+                "Keywords": st.column_config.Column(
+                width="medium",
+                required=True,
+                ),
                 "Affiliation": st.column_config.Column(
                 width="medium",
                 required=True,
@@ -1222,7 +1226,12 @@ You are now ready to answer the user’s questions about their recommended gradu
                 "LDA_rank": "Ranking","LDA_Name": "Name", "Publication": st.column_config.Column(
                 width="large",
                 required=True,
-                ),})
+                ),
+                "Keywords_LDA": st.column_config.Column(
+                width="medium",
+                required=True,
+                ),
+                })
                 st.write("Double clicking individual cell will provide detail texts.")
                 if st.session_state.page == "v3":
                         st.markdown("---")
