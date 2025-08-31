@@ -1060,7 +1060,6 @@ elif st.session_state.page == "v1" or st.session_state.page == "v2":
             st.rerun()
     if st.session_state.page == "v1":
         st.title("Grad Student Advisor Recommender System")
-        st.subheader("Version 1 - Advisor Recommendation & AI Follow-up")
         st.divider()
         st.markdown("_Grad Student Scenario:_")
         scenario = st.session_state.selected_scenarios[0]
@@ -1070,7 +1069,6 @@ elif st.session_state.page == "v1" or st.session_state.page == "v2":
         keywords = st.multiselect("Select Research Keywords:", options=options)
     if st.session_state.page == "v2":
         st.title("Grad Student Advisor Recommender System")
-        st.subheader("**Version 2**: Advisor Recommendation with AI-Assisted Pre-Quiz")
         st.divider()
         st.markdown("_Grad Stuedent Scenario:_")
         scenario = st.session_state.selected_scenarios[1]
