@@ -1200,7 +1200,7 @@ You are now ready to answer the user’s questions about their recommended gradu
                 #left_column, right_column = st.tabs(["Text Similarity", "Topic Similarity"])
                 #with left_column:
                 
-                df1_new = df1[['Ranking','Name','Publication','Affiliation']]                
+                df1_new = df1[['Ranking','Name','Keywords', 'Similarity Score','Publication','Affiliation']]                
                 df1_new = df1_new.to_dict(orient='records')
                 st.write("Top 3 recommended advisor based on Text Similarity of keywords:")
                 st.dataframe(df1_new, hide_index=True,  column_config={
@@ -1216,7 +1216,7 @@ You are now ready to answer the user’s questions about their recommended gradu
 
                 #with right_column:
                 st.write("Top 3 recommended advisor based on LDA Topic Similarity of 30 topics:")
-                df2_new = df2[['LDA_rank','LDA_Name','Publication','Affiliation']] 
+                df2_new = df2[['LDA_rank','LDA_Name','Keywords_LDA','Publication','Affiliation']] 
                 df2_new = df2_new.to_dict(orient='records')
                 st.dataframe(df2_new,hide_index=True, column_config={
                 "LDA_rank": "Ranking","LDA_Name": "Name", "Publication": st.column_config.Column(
