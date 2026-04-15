@@ -9,6 +9,51 @@ Conversational recommender systems increasingly rely on Large Language Models (L
 This project addresses that gap by introducing **guided interaction techniques** that scaffold user engagement and improve comprehension of AI-generated recommendations.
 
 ---
+## 🎥 Demo & User Study Walkthrough
+
+### 📹 Full User Study Demo
+A complete walkthrough of the system, including scenario selection, recommendation generation, and guided interaction.
+
+👉 [Watch Full Demo Video](#)  
+<!-- You can upload video to YouTube / Google Drive / GitHub Releases and paste link -->
+
+---
+
+## 🖼️ System Interface
+
+### 🧾 Scenario Selection
+Users begin by selecting a scenario (e.g., research interests or patient case) to receive recommendations.
+
+![Scenario Selection](images/scenario.png)
+
+---
+
+### 🎯 Recommendation Output
+The system generates top recommendations based on similarity and topic modeling.
+
+![Recommendation](images/recommendation.png)
+
+---
+
+### 💬 Version 1: Starter Questions Interface
+Provides predefined questions to help users initiate explanation-seeking.
+
+![Starter Questions UI](images/version1.png)
+
+---
+
+### 🧠 Version 2: Quiz-Based Interaction Interface
+Engages users with multiple-choice questions and feedback to improve understanding.
+
+![Quiz-Based UI](images/version2.png)
+
+---
+
+## 🎯 Key Interaction Difference
+- **Version 1:** Passive exploration (click & read)  
+- **Version 2:** Active reasoning (answer & learn)  
+
+---
 
 ## 💡 Key Contributions
 - 🤖 LLM-powered conversational explanation system  
