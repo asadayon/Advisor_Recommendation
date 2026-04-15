@@ -25,21 +25,21 @@ A complete walkthrough of the system, including scenario selection, recommendati
 ### 🎯 Recommendation Output
 Users begin by selecting a scenario (e.g., research interests or patient case) to receive recommendations. The system generates top recommendations based on similarity and topic modeling.
 
-![Recommendation](images/recommendation.png)
+![Recommendation](image/recommendation.png)
 
 ---
 
 ### 💬 Version 1: Starter Questions Interface
 Provides predefined questions to help users initiate explanation-seeking.
 
-![Starter Questions UI](images/version1.png)
+![Starter Questions UI](image/version1.png)
 
 ---
 
 ### 🧠 Version 2: Quiz-Based Interaction Interface
 Engages users with multiple-choice questions and feedback to improve understanding.
 
-![Quiz-Based UI](images/version2.png)
+![Quiz-Based UI](image/version2.png)
 
 ---
 
