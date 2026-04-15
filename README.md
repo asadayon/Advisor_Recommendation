@@ -15,6 +15,7 @@ This project addresses that gap by introducing **guided interaction techniques**
 A complete walkthrough of the system, including scenario selection, recommendation generation, and guided interaction.
 
 👉 [Watch Full Demo Video](https://youtu.be/yPALr1OtNRs)  
+[![Watch the demo](https://img.youtube.com/vi/yPALr1OtNRs/0.jpg)](https://youtu.be/yPALr1OtNRs)
 
 ---
 
