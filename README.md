@@ -21,15 +21,9 @@ A complete walkthrough of the system, including scenario selection, recommendati
 
 ## 🖼️ System Interface
 
-### 🧾 Scenario Selection
-Users begin by selecting a scenario (e.g., research interests or patient case) to receive recommendations.
-
-![Scenario Selection](images/scenario.png)
-
----
-
+\
 ### 🎯 Recommendation Output
-The system generates top recommendations based on similarity and topic modeling.
+Users begin by selecting a scenario (e.g., research interests or patient case) to receive recommendations. The system generates top recommendations based on similarity and topic modeling.
 
 ![Recommendation](images/recommendation.png)
 
